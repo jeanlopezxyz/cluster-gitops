@@ -18,10 +18,7 @@ argocd:
 
 # App of Apps Configuration - Pure pattern
 app_of_apps:
-  enabled: false  # Set to true when Git repository is ready
   name: "day2-bootstrap"
-  git_repository: "{{ gitops_repository | default('') }}"
-  git_path: "apps/cluster1"
   project_name: "day2-operations"
 
 # Timeouts and retries
