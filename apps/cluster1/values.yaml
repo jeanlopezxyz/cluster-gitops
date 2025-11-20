@@ -31,7 +31,7 @@ helper-argocd:
       enabled: true
       syncWave: "1"
       chart:
-        repoURL: git@github.com:jeanlopezxyz/cluster-gitops.git
+        repoURL: https://github.com/jeanlopezxyz/cluster-gitops.git
         path: charts/node-timezone
         targetRevision: charts
       destination:
@@ -50,7 +50,7 @@ helper-argocd:
       enabled: true
       syncWave: "2"
       chart:
-        repoURL: git@github.com:jeanlopezxyz/cluster-gitops.git
+        repoURL: https://github.com/jeanlopezxyz/cluster-gitops.git
         path: charts/node-tuning
         targetRevision: charts
       destination:
@@ -82,7 +82,7 @@ helper-argocd:
       enabled: true
       syncWave: "3"
       chart:
-        repoURL: git@github.com:jeanlopezxyz/cluster-gitops.git
+        repoURL: https://github.com/jeanlopezxyz/cluster-gitops.git
         path: charts/cluster-oauth
         targetRevision: charts
       destination:
@@ -115,7 +115,7 @@ helper-argocd:
       enabled: true
       syncWave: "4"
       chart:
-        repoURL: git@github.com:jeanlopezxyz/cluster-gitops.git
+        repoURL: https://github.com/jeanlopezxyz/cluster-gitops.git
         path: charts/network-nmstate
         targetRevision: charts
       destination:
