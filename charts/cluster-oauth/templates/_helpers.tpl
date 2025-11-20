@@ -57,7 +57,7 @@ Generate htpasswd data from users array
 {{- else if .Values.htpasswd.users -}}
 {{- $htpasswdContent := "" -}}
 {{- range .Values.htpasswd.users -}}
-{{- $htpasswdContent = printf "%s%s:%s\n" $htpasswdContent .username (.password | htpasswd) -}}
+{{- $htpasswdContent = printf "%s%s:%s\n" $htpasswdContent .username (htpasswd .username .password) -}}
 {{- end -}}
 {{- $htpasswdContent | b64enc }}
 {{- end -}}
