@@ -1,0 +1,83 @@
+{{- if and .Values.global.enabled .Values.backup.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Values.backup.name }}
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    {{- include "etcd-backup.labels" . | nindent 4 }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  schedule: {{ .Values.backup.schedule | quote }}
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    metadata:
+      labels:
+        {{- include "etcd-backup.selectorLabels" . | nindent 8 }}
+    spec:
+      template:
+        metadata:
+          labels:
+            {{- include "etcd-backup.selectorLabels" . | nindent 12 }}
+        spec:
+          serviceAccountName: {{ .Values.serviceAccount.name }}
+          securityContext:
+            runAsUser: {{ .Values.securityContext.runAsUser }}
+          restartPolicy: OnFailure
+          containers:
+          - name: etcd-backup
+            image: {{ .Values.backup.image }}
+            imagePullPolicy: IfNotPresent
+            resources:
+              {{- toYaml .Values.backup.resources | nindent 14 }}
+            securityContext:
+              privileged: {{ .Values.securityContext.privileged }}
+              runAsUser: {{ .Values.securityContext.runAsUser }}
+            command:
+            - /bin/bash
+            - -c
+            - |
+              #!/bin/bash
+              set -euo pipefail
+              
+              # Variables
+              BACKUP_DIR="{{ .Values.backup.mountPath }}"
+              RETENTION_DAYS="{{ .Values.backup.retention }}"
+              TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+              
+              # Create backup directory if it doesn't exist
+              mkdir -p $BACKUP_DIR
+              
+              # Get a control plane node
+              CONTROL_NODE=$(oc get nodes -l node-role.kubernetes.io/control-plane -o jsonpath='{.items[0].metadata.name}')
+              
+              echo "Starting ETCD backup on node: $CONTROL_NODE at $(date)"
+              
+              # Create debug pod and run backup
+              oc debug node/$CONTROL_NODE --image={{ .Values.backup.image }} -- \
+                chroot /host /bin/bash -c "
+                  /usr/local/bin/cluster-backup.sh $BACKUP_DIR/etcd-backup-$TIMESTAMP
+                "
+              
+              echo "ETCD backup completed successfully"
+              
+              # Clean up old backups
+              echo "Cleaning up backups older than $RETENTION_DAYS days"
+              find $BACKUP_DIR -name 'etcd-backup-*' -type d -mtime +$RETENTION_DAYS -exec rm -rf {} + || true
+              
+              echo "Backup cleanup completed"
+              
+              # List current backups
+              echo "Current backups:"
+              ls -la $BACKUP_DIR/ | grep etcd-backup || echo "No backups found"
+            volumeMounts:
+            - name: backup-storage
+              mountPath: {{ .Values.backup.mountPath }}
+          volumes:
+          - name: backup-storage
+            persistentVolumeClaim:
+              claimName: {{ .Values.storage.pvc.name }}
+{{- end }}

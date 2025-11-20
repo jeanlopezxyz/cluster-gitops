@@ -1,0 +1,17 @@
+{{- if and .Values.global.enabled .Values.namespace.create }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .Values.namespace.name }}
+  labels:
+    {{- include "etcd-backup.labels" . | nindent 4 }}
+    openshift.io/cluster-monitoring: "true"
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/audit: privileged
+    pod-security.kubernetes.io/warn: privileged
+    security.openshift.io/scc.podSecurityLabelSync: "false"
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+    openshift.io/display-name: {{ .Values.namespace.displayName | quote }}
+    openshift.io/description: {{ .Values.namespace.description | quote }}
+{{- end }}

@@ -1,0 +1,130 @@
+# Default values for network-nmstate chart
+
+# Global configuration
+global:
+  enabled: true
+  syncwave: "1"
+
+# Helper operator configuration for NMState operator installation
+helper-operator:
+  global:
+    syncwave: "1"
+  
+  operators:
+    nmstate:
+      enabled: true
+      syncwave: "1"
+      namespace:
+        create: true
+        name: "openshift-nmstate"
+      operatorgroup:
+        create: true
+      subscription:
+        operatorName: "kubernetes-nmstate-operator"
+        channel: "stable"
+        source: "redhat-operators"
+        sourceNamespace: "openshift-marketplace"
+        approval: "Automatic"
+
+# NMState instance configuration
+nmstate:
+  enabled: true
+  # Instance name
+  name: "nmstate"
+
+# Node Network Configuration Policies
+networkPolicies:
+  # OVS Bridge configurations
+  bridges: []
+    # - name: "br0"
+    #   type: "ovs-bridge" 
+    #   state: "up"
+    #   ipv4:
+    #     enabled: false
+    #   ipv6: 
+    #     enabled: false
+    #   mtu: 9000
+    #   ports:
+    #     - name: "bond0"
+    #       vlan:
+    #         mode: "trunk"
+    #         trunkTags:
+    #           - idRange:
+    #               min: 270
+    #               max: 376
+
+  # Bond configurations
+  bonds: []
+    # - name: "bond0"
+    #   type: "bond"
+    #   state: "up"
+    #   mtu: 9000
+    #   bondConfig:
+    #     mode: "802.3ad"
+    #     options:
+    #       miimon: "100"
+    #       lacp_rate: "fast"
+    #       xmit_hash_policy: "layer3+4"
+    #   linkAggregation:
+    #     mode: "802.3ad"
+    #     slaves: ["ens3", "ens4"]
+
+  # VLAN interfaces
+  vlans: []
+    # - name: "bond0.270"
+    #   type: "vlan"
+    #   state: "up"
+    #   vlan:
+    #     base_iface: "bond0"
+    #     id: 270
+    #   ipv4:
+    #     enabled: true
+    #     dhcp: false
+    #     address:
+    #       - ip: "192.168.1.10"
+    #         prefix_length: 24
+
+# Custom Node Network Configuration Policies
+customPolicies: []
+  # - name: "custom-network-config"
+  #   nodeSelector:
+  #     node-role.kubernetes.io/worker: ""
+  #   desiredState:
+  #     interfaces:
+  #       - name: "eth0"
+  #         type: "ethernet"
+  #         state: "up"
+
+# Network Attachment Definitions
+networkAttachments:
+  # Enable automatic creation of VLAN NADs
+  vlansNADs:
+    enabled: false
+    # List of specific VLANs to create NADs for
+    vlanList: []
+      # - 270
+      # - 271
+      # - 272
+    # Bridge to use for VLAN NADs
+    bridge: "br0"
+    # Default namespace for NADs
+    namespace: "default"
+    # MTU for VLAN interfaces
+    mtu: 9000
+    # CNI type for OpenShift Virtualization
+    cniType: "cnv-bridge"
+    # Enable MAC spoofing check
+    macSpoofCheck: true
+    
+  # Custom NADs (manual definition)
+  custom: []
+    # - name: "baremetal-network"
+    #   namespace: "default"
+    #   config: |
+    #     {
+    #       "cniVersion": "0.3.1",
+    #       "name": "baremetal-network",
+    #       "type": "bridge",
+    #       "bridge": "br0",
+    #       "ipam": {}
+    #     }

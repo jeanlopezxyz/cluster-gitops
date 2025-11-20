@@ -1,0 +1,46 @@
+{{- range $key, $app := .Values.applications }}
+{{- if $app.enabled }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ include "helper-argocd.appName" (dict "Release" $.Release "key" $key) }}
+  namespace: {{ $.Values.global.namespace }}
+  labels:
+    {{- include "helper-argocd.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ $key }}
+  annotations:
+    {{- if $app.syncWave }}
+    argocd.argoproj.io/sync-wave: {{ $app.syncWave | quote }}
+    {{- end }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: {{ $.Values.appProject.name }}
+  source:
+    {{- if $app.chart }}
+    repoURL: {{ $app.chart.repoURL }}
+    path: {{ $app.chart.path }}
+    targetRevision: {{ $app.chart.targetRevision | default "HEAD" }}
+    {{- if $app.values }}
+    helm:
+      valueFiles:
+        - values.yaml
+      values: |
+        {{- toYaml $app.values | nindent 8 }}
+    {{- end }}
+    {{- else }}
+    repoURL: {{ $app.repoURL }}
+    path: {{ $app.path }}
+    targetRevision: {{ $app.targetRevision | default "HEAD" }}
+    {{- end }}
+  destination:
+    server: {{ $app.destination.server | default "https://kubernetes.default.svc" }}
+    namespace: {{ $app.destination.namespace | default "default" }}
+  {{- include "helper-argocd.syncPolicy" (dict "app" $app "global" $.Values.global) | nindent 2 }}
+  {{- if $app.ignoreDifferences }}
+  ignoreDifferences:
+    {{- toYaml $app.ignoreDifferences | nindent 4 }}
+  {{- end }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,26 @@
+{{- range $key, $operator := .Values.operators }}
+{{- if and $operator.enabled $operator.operatorgroup.create }}
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: {{ include "helper-operator.operatorGroupName" (dict "key" $key) }}
+  namespace: {{ include "helper-operator.namespace" (dict "operator" $operator "key" $key "Release" $.Release) }}
+  labels:
+    {{- include "helper-operator.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ $key }}-operatorgroup
+  annotations:
+    {{- if $operator.syncwave }}
+    argocd.argoproj.io/sync-wave: {{ $operator.syncwave | quote }}
+    {{- else }}
+    argocd.argoproj.io/sync-wave: {{ $.Values.global.syncwave | quote }}
+    {{- end }}
+spec:
+  {{- if $operator.operatorgroup.targetNamespaces }}
+  targetNamespaces:
+    {{- range $operator.operatorgroup.targetNamespaces }}
+    - {{ . | quote }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+{{- end }}

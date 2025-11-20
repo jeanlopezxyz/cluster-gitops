@@ -1,0 +1,66 @@
+# Telefonica Chile specific configuration example
+# Based on existing configurations in /03.day2/nads and /03.day2/nmstate
+
+# Install NMState operator
+operator:
+  enabled: true
+  namespace: "openshift-nmstate"
+
+# Create NMState instance
+nmstate:
+  enabled: true
+  name: "nmstate"
+
+# Network configuration policies
+networkPolicies:
+  # OVS Bridge br0 configuration (based on br0-bridge.yaml)
+  bridges:
+    - name: "br0"
+      type: "ovs-bridge"
+      state: "up"
+      ipv4:
+        enabled: false
+      ipv6:
+        enabled: false
+      mtu: 9000
+      ports:
+        - name: "bond0"
+          vlan:
+            mode: "trunk"
+            trunkTags:
+              - idRange:
+                  min: 270
+                  max: 376
+
+# Network Attachment Definitions
+networkAttachments:
+  # Generate all VLAN NADs automatically (based on all-vlans-nads.yaml)
+  vlansNADs:
+    enabled: true
+    vlanList:
+      # Telefonica Chile specific VLANs
+      - 270
+      - 271
+      - 272
+      - 275
+      - 276
+      - 326
+      - 329
+      - 339
+      - 340
+      - 362
+      - 366
+      - 367
+      - 368
+      - 370
+      - 371
+      - 372
+      - 376
+    bridge: "br0"
+    namespace: "default"
+    mtu: 9000
+    cniType: "cnv-bridge"
+    macSpoofCheck: true
+
+# Note: This will generate individual NADs for VLANs:
+# 270, 271, 272, 275, 276, 326, 329, 339, 340, 362, 366, 367, 368, 370, 371, 372, 376

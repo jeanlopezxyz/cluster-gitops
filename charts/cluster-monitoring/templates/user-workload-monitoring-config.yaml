@@ -1,0 +1,65 @@
+{{- if and .Values.global.enabled .Values.userWorkloadMonitoring.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-workload-monitoring-config
+  namespace: openshift-user-workload-monitoring
+  labels:
+    {{- include "cluster-monitoring.labels" . | nindent 4 }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+data:
+  config.yaml: |
+    {{- if .Values.userWorkloadMonitoring.prometheus }}
+    prometheus:
+      {{- if .Values.userWorkloadMonitoring.prometheus.retention }}
+      retention: {{ .Values.userWorkloadMonitoring.prometheus.retention | quote }}
+      {{- end }}
+      {{- if .Values.userWorkloadMonitoring.prometheus.storage.enabled }}
+      volumeClaimTemplate:
+        spec:
+          {{- if .Values.userWorkloadMonitoring.prometheus.storage.storageClass }}
+          storageClassName: {{ .Values.userWorkloadMonitoring.prometheus.storage.storageClass }}
+          {{- end }}
+          resources:
+            requests:
+              storage: {{ .Values.userWorkloadMonitoring.prometheus.storage.size }}
+      {{- end }}
+      {{- if .Values.userWorkloadMonitoring.prometheus.resources }}
+      resources:
+        {{- toYaml .Values.userWorkloadMonitoring.prometheus.resources | nindent 8 }}
+      {{- end }}
+    {{- end }}
+
+    {{- if .Values.userWorkloadMonitoring.thanosRuler }}
+    thanosRuler:
+      {{- if .Values.userWorkloadMonitoring.thanosRuler.storage.enabled }}
+      volumeClaimTemplate:
+        spec:
+          {{- if .Values.userWorkloadMonitoring.thanosRuler.storage.storageClass }}
+          storageClassName: {{ .Values.userWorkloadMonitoring.thanosRuler.storage.storageClass }}
+          {{- end }}
+          resources:
+            requests:
+              storage: {{ .Values.userWorkloadMonitoring.thanosRuler.storage.size }}
+      {{- end }}
+      {{- if .Values.userWorkloadMonitoring.thanosRuler.resources }}
+      resources:
+        {{- toYaml .Values.userWorkloadMonitoring.thanosRuler.resources | nindent 8 }}
+      {{- end }}
+    {{- end }}
+
+    {{- if .Values.alerting.enabled }}
+    {{- if .Values.alerting.externalAlertmanagers }}
+    alertmanager:
+      {{- if gt (len .Values.alerting.externalAlertmanagers) 0 }}
+      externalAlertmanagers:
+      {{- range .Values.alerting.externalAlertmanagers }}
+      - namespace: {{ .namespace }}
+        name: {{ .name }}
+        port: {{ .port | default 9093 }}
+      {{- end }}
+      {{- end }}
+    {{- end }}
+    {{- end }}
+{{- end }}

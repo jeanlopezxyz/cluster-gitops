@@ -1,0 +1,47 @@
+{{- if and .Values.machineConfig.enabled .Values.machineConfig.master.enabled }}
+apiVersion: machineconfiguration.openshift.io/v1
+kind: MachineConfig
+metadata:
+  name: 99-master-timezone
+  labels:
+    machineconfiguration.openshift.io/role: master
+    {{- with .Values.machineConfig.master.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- include "node-timezone.labels" . | nindent 4 }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+    {{- with .Values.machineConfig.master.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  config:
+    ignition:
+      version: 3.2.0
+    systemd:
+      units:
+      - name: configure-timezone.service
+        enabled: true
+        contents: |
+          [Unit]
+          Description=Configure system timezone
+          Wants=network-online.target
+          After=network-online.target
+          Before=chronyd.service
+          ConditionFileIsExecutable=/usr/bin/timedatectl
+          
+          [Service]
+          Type=oneshot
+          ExecStart=/usr/bin/timedatectl set-timezone {{ .Values.timezone.value }}
+          RemainAfterExit=true
+          
+          [Install]
+          WantedBy=multi-user.target
+    storage:
+      files:
+      - path: /etc/timezone
+        mode: 420
+        overwrite: true
+        contents:
+          inline: {{ .Values.timezone.value }}
+{{- end }}
