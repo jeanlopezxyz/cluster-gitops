@@ -1,0 +1,179 @@
+# Day-2 Applications for Cluster 1
+# Red Hat Consulting
+
+helper-argocd:
+  # Global settings
+  global:
+    namespace: openshift-gitops
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+      syncOptions:
+        - CreateNamespace=true
+        - ApplyOutOfSyncOnly=true
+      retry:
+        limit: 3
+        backoff:
+          duration: "30s"
+          factor: 2
+          maxDuration: "5m"
+
+  # AppProject
+  appProject:
+    enabled: true
+    name: "day2-operations"
+    description: "OpenShift Day-2 Operations Project - Cluster 1"
+
+  # Applications
+  applications:
+    timezone:
+      enabled: true
+      syncWave: "1"
+      chart:
+        repoURL: https://dev.azure.com/tch-controlversiones/ocp-v/_git/day2-gitops
+        path: charts/node-timezone
+        targetRevision: charts
+      destination:
+        namespace: default
+      values:
+        timezone:
+          value: "America/Santiago"
+        machineConfig:
+          enabled: true
+          master:
+            enabled: true
+          worker:
+            enabled: true
+
+    tuning:
+      enabled: true
+      syncWave: "2"
+      chart:
+        repoURL: https://dev.azure.com/tch-controlversiones/ocp-v/_git/day2-gitops
+        path: charts/node-tuning
+        targetRevision: charts
+      destination:
+        namespace: default
+      values:
+        global:
+          enabled: true
+        machineConfig:
+          master:
+            enabled: true
+          worker:
+            enabled: true
+        maxPods:
+          enabled: true
+          master: 100
+          worker: 250
+        systemReserved:
+          enabled: true
+          master:
+            cpu: "1000m"
+            memory: "2Gi"
+            ephemeral_storage: "5Gi"
+          worker:
+            cpu: "500m"
+            memory: "1Gi"
+            ephemeral_storage: "5Gi"
+
+    oauth:
+      enabled: true
+      syncWave: "3"
+      chart:
+        repoURL: https://dev.azure.com/tch-controlversiones/ocp-v/_git/day2-gitops
+        path: charts/cluster-oauth
+        targetRevision: charts
+      destination:
+        namespace: default
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: false  # Manual for security
+      values:
+        oauth:
+          enabled: true
+        htpasswd:
+          enabled: true
+          secretName: "htpasswd-secret"
+          users:
+            - username: "admin"
+              password: "redhat123"
+            - username: "developer"
+              password: "redhat123"
+        rbac:
+          clusterAdmins:
+            enabled: true
+            groupName: "cluster-admins"
+            users:
+              - "admin"
+          disableSelfProvisioning:
+            enabled: true
+
+    network:
+      enabled: true
+      syncWave: "4"
+      chart:
+        repoURL: https://dev.azure.com/tch-controlversiones/ocp-v/_git/day2-gitops
+        path: charts/network-nmstate
+        targetRevision: charts
+      destination:
+        namespace: openshift-nmstate
+      values:
+        global:
+          enabled: true
+          syncwave: "1"
+        helper-operator:
+          global:
+            syncwave: "1"
+          operators:
+            nmstate:
+              enabled: true
+              syncwave: "1"
+              namespace:
+                create: true
+                name: "openshift-nmstate"
+              operatorgroup:
+                create: true
+              subscription:
+                operatorName: "kubernetes-nmstate-operator"
+                channel: "stable"
+                source: "redhat-operators"
+                sourceNamespace: "openshift-marketplace"
+                approval: "Automatic"
+        nmstate:
+          enabled: true
+          name: "nmstate"
+        networkPolicies:
+          bridges: []
+          bonds: []
+          vlans: []
+        customPolicies: []
+        networkAttachments:
+          vlansNADs:
+            enabled: true
+            vlanList:
+              - 270
+              - 271
+              - 272
+              - 275
+              - 276
+              - 326
+              - 329
+              - 339
+              - 340
+              - 362
+              - 366
+              - 367
+              - 368
+              - 370
+              - 371
+              - 372
+              - 376
+            bridge: "br0"
+            namespace: "default"
+            mtu: 9000
+            cniType: "cnv-bridge"
+            macSpoofCheck: true
+          custom: []
