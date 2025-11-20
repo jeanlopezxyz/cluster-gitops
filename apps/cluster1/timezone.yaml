@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: timezone
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: day2-operations
+  source:
+    repoURL: https://github.com/jeanlopezxyz/cluster-gitops.git
+    path: charts/node-timezone
+    targetRevision: charts
+    helm:
+      values: |
+        timezone:
+          value: "America/Santiago"
+        machineConfig:
+          enabled: true
+          master:
+            enabled: true
+          worker:
+            enabled: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-config
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
