@@ -18,7 +18,7 @@ argocd:
 
 # App of Apps defaults (overridden by group_vars)
 app_of_apps_defaults:
-  name: "day2-bootstrap"
+  name: "bootstrap"
   project_name: "day2-operations"
 
 # Timeouts and retries
