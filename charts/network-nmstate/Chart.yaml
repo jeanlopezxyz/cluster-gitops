@@ -9,7 +9,7 @@ appVersion: "1.0"
 dependencies:
   - name: helper-operator
     version: "1.0.1"
-    repository: "http://localhost:8090"
+    repository: "https://jeanlopezxyz.github.io/cluster-gitops/charts"
 
 keywords:
   - openshift
