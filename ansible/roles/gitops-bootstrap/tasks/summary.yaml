@@ -23,13 +23,8 @@
       
       📝 Next Steps:
         1. Access ArgoCD UI
-        {% if app_of_apps.enabled %}
-        2. Monitor '{{ app_of_apps.name }}' application
-        3. GitOps will automatically deploy Day-2 applications
-        {% else %}
-        2. Create Git repository with Day-2 configurations
-        3. Deploy App of Apps pointing to Git repository
-        {% endif %}
+        2. Monitor 'day2-bootstrap' application
+        3. GitOps will deploy Day-2 applications automatically
       
       🔄 GitOps Pattern:
         Ansible: ✅ GitOps bootstrap complete
