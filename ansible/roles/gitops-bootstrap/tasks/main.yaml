@@ -12,13 +12,14 @@
     api_version: config.openshift.io/v1
     kind: ClusterVersion
   register: cluster_info
-  failed_when: cluster_info.resources | length == 0
+  failed_when: cluster_info.resources is not defined or cluster_info.resources | length == 0
 
 - name: Display cluster information
   ansible.builtin.debug:
     msg: |
-      ✅ Connected to OpenShift {{ cluster_info.resources[0].status.desired.version }}
-      🆔 Cluster ID: {{ cluster_info.resources[0].spec.clusterID }}
+      ✅ Connected to OpenShift {{ cluster_info.resources[0].status.desired.version | default('Unknown') }}
+      🆔 Cluster ID: {{ cluster_info.resources[0].spec.clusterID | default('Unknown') }}
+  when: cluster_info.resources is defined and cluster_info.resources | length > 0
 
 - name: Install GitOps Operator
   ansible.builtin.include_tasks: operator.yaml
