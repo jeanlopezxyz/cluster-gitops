@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: day2-tuning
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: day2-operations
+  source:
+    repoURL: https://github.com/jeanlopezxyz/cluster-gitops.git
+    path: charts/node-tuning
+    targetRevision: charts
+    helm:
+      values: |
+        global:
+          enabled: true
+        machineConfig:
+          master:
+            enabled: true
+          worker:
+            enabled: true
+        maxPods:
+          enabled: true
+          master: 100
+          worker: 250
+        systemReserved:
+          enabled: true
+          master:
+            cpu: "1000m"
+            memory: "2Gi"
+            ephemeral_storage: "5Gi"
+          worker:
+            cpu: "500m"
+            memory: "1Gi"
+            ephemeral_storage: "5Gi"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
