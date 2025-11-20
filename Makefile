@@ -8,7 +8,9 @@ help: ## Show this help message
 
 bootstrap: ## Install GitOps Operator and deploy App of Apps
 	@echo "🚀 Starting OpenShift GitOps Bootstrap..."
-	cd ansible && ansible-playbook -i inventories/production/hosts.yaml playbooks/bootstrap-gitops.yaml -v
+	@git checkout ansible
+	@cd ansible && ansible-playbook -i inventories/production/hosts.yaml playbooks/bootstrap-gitops.yaml -v
+	@git checkout main
 
 status: ## Check GitOps and applications status
 	@echo "📊 Checking GitOps Status..."
