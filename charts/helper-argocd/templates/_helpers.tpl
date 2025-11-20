@@ -53,7 +53,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Generate Application name
 */}}
 {{- define "helper-argocd.appName" -}}
-{{- printf "%s-%s" .Release.Name .key }}
+{{- .key }}
 {{- end }}
 
 {{/*
