@@ -1,0 +1,39 @@
+---
+# Main tasks for gitops-bootstrap role
+# Red Hat Consulting
+
+- name: Display bootstrap banner
+  ansible.builtin.debug:
+    msg: |
+      🚀 Bootstrapping GitOps for cluster: {{ cluster_name | default('openshift-cluster') }}
+      📁 GitOps Repository: {{ app_of_apps.git_repository }}
+  when: display.show_banner | default(true)
+
+- name: Verify OpenShift connection
+  kubernetes.core.k8s_info:
+    api_version: config.openshift.io/v1
+    kind: ClusterVersion
+  register: cluster_info
+  failed_when: cluster_info.resources | length == 0
+
+- name: Display cluster information
+  ansible.builtin.debug:
+    msg: |
+      ✅ Connected to OpenShift {{ cluster_info.resources[0].status.desired.version }}
+      🆔 Cluster ID: {{ cluster_info.resources[0].spec.clusterID }}
+
+- name: Install GitOps Operator
+  ansible.builtin.include_tasks: operator.yaml
+
+- name: Configure ArgoCD
+  ansible.builtin.include_tasks: argocd.yaml
+
+- name: Deploy App of Apps
+  ansible.builtin.include_tasks: app-of-apps.yaml
+  when: 
+    - app_of_apps.enabled | default(false)
+    - app_of_apps.git_repository | length > 0
+
+- name: Display completion summary
+  ansible.builtin.include_tasks: summary.yaml
+  when: display.show_completion | default(true)

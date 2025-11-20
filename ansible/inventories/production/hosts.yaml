@@ -1,0 +1,36 @@
+# Production inventory for OpenShift Day-2 operations
+# Red Hat Consulting
+
+all:
+  children:
+    openshift_clusters:
+      hosts:
+        localhost:
+          ansible_connection: local
+          ansible_python_interpreter: "{{ ansible_playbook_python }}"
+      
+      vars:
+        # Cluster configuration
+        cluster_name: "telefonica-prod"
+        gitops_repository: "https://dev.azure.com/tch-controlversiones/ocp-v/_git/day2-gitops"
+        
+        # Telefonica-specific configuration
+        timezone: "America/Santiago"
+        network_vlans:
+          - 270
+          - 271
+          - 272
+          - 275
+          - 276
+          - 326
+          - 329
+          - 339
+          - 340
+          - 362
+          - 366
+          - 367
+          - 368
+          - 370
+          - 371
+          - 372
+          - 376

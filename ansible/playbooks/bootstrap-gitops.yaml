@@ -1,0 +1,14 @@
+---
+# Bootstrap GitOps - Clean and maintainable
+# Red Hat Consulting
+
+- name: Bootstrap GitOps for OpenShift Day-2 Operations
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  
+  vars:
+    cluster_name: "{{ cluster_name | default('openshift-cluster') }}"
+
+  roles:
+    - gitops-bootstrap
