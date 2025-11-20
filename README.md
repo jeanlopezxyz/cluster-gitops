@@ -42,7 +42,7 @@ Contains Ansible automation for GitOps bootstrap:
 ### 1. Bootstrap GitOps (One-time setup)
 ```bash
 # Clone the ansible branch
-git clone -b ansible git@github.com:jeanlopezxyz/cluster-gitops.git
+git clone -b ansible https://github.com/jeanlopezxyz/cluster-gitops.git
 cd cluster-gitops
 
 # Configure your cluster in inventories/production/hosts.yaml
@@ -53,7 +53,7 @@ ansible-playbook playbooks/bootstrap-gitops.yaml
 ### 2. Customize for Your Environment
 ```bash
 # Clone the apps branch
-git clone -b apps git@github.com:jeanlopezxyz/cluster-gitops.git apps
+git clone -b apps https://github.com/jeanlopezxyz/cluster-gitops.git apps
 cd apps
 
 # Modify cluster configurations in cluster1/values.yaml
