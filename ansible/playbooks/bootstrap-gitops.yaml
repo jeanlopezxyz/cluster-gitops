@@ -8,7 +8,7 @@
   gather_facts: false
   
   vars:
-    cluster_name: "{{ cluster_name | default('openshift-cluster') }}"
+    cluster_name: "openshift-cluster"
 
   roles:
     - gitops-bootstrap
