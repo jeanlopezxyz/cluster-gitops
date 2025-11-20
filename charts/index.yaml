@@ -1,0 +1,52 @@
+apiVersion: v1
+entries:
+  helper-operator:
+  - annotations:
+      category: Operators
+    apiVersion: v2
+    appVersion: "1.0"
+    created: "2025-11-20T18:32:28.505536442-05:00"
+    description: Helper chart for installing OpenShift Operators
+    digest: 9071ac207dbeddfd821a52e358863af2774515637adf0eeca5c0714595848c38
+    home: https://github.com/redhat-consulting/openshift-day2-gitops
+    keywords:
+    - helper
+    - subchart
+    - operator
+    - openshift
+    - olm
+    maintainers:
+    - email: consulting@redhat.com
+      name: Red Hat Consulting
+    name: helper-operator
+    sources:
+    - https://github.com/redhat-consulting/openshift-day2-gitops
+    type: application
+    urls:
+    - http://localhost:8090/helper-operator-1.0.1.tgz
+    version: 1.0.1
+  - annotations:
+      category: Operators
+    apiVersion: v2
+    appVersion: "1.0"
+    created: "2025-11-20T18:32:28.505408222-05:00"
+    description: Helper chart for installing OpenShift Operators
+    digest: 9ff39c309b2f37b78dd903f265a711df2911f573b6a6e4cd6f9956c2a89fdd03
+    home: https://github.com/redhat-consulting/openshift-day2-gitops
+    keywords:
+    - helper
+    - subchart
+    - operator
+    - openshift
+    - olm
+    maintainers:
+    - email: consulting@redhat.com
+      name: Red Hat Consulting
+    name: helper-operator
+    sources:
+    - https://github.com/redhat-consulting/openshift-day2-gitops
+    type: library
+    urls:
+    - http://localhost:8090/helper-operator-1.0.0.tgz
+    version: 1.0.0
+generated: "2025-11-20T18:32:28.505176516-05:00"

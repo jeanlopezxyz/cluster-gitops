@@ -1,9 +1,9 @@
 apiVersion: v2
 name: helper-operator
 description: Helper chart for installing OpenShift Operators
-version: 1.0.0
+version: 1.0.1
 appVersion: "1.0"
-type: library
+type: application
 maintainers:
   - name: Red Hat Consulting
     email: consulting@redhat.com
