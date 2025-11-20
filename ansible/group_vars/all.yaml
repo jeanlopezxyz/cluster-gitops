@@ -8,6 +8,6 @@ gitops:
   wait_timeout: 600
 
 # GitOps Repository Configuration
-gitops_repository: "git@github.com:jeanlopezxyz/cluster-gitops.git"
+gitops_repository: "https://github.com/jeanlopezxyz/cluster-gitops.git"
 
 # Note: Day-2 application configurations are managed by ArgoCD from Git repository
