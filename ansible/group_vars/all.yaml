@@ -7,7 +7,18 @@ gitops:
   namespace: "openshift-gitops"
   wait_timeout: 600
 
-# GitOps Repository Configuration
-gitops_repository: "https://github.com/jeanlopezxyz/cluster-gitops.git"
+# App of Apps Configuration
+app_of_apps:
+  enabled: true
+  git_repository: "https://github.com/jeanlopezxyz/cluster-gitops.git"
+  git_branch: "apps"
+  path: "apps/cluster1"
+  sync_policy:
+    automated: true
+    prune: true
+    self_heal: true
 
-# Note: Day-2 application configurations are managed by ArgoCD from Git repository
+# Display Configuration
+display:
+  show_banner: true
+  show_completion: true

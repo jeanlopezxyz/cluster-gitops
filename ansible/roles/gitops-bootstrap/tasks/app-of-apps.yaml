@@ -54,8 +54,8 @@
         project: "{{ app_of_apps.project_name }}"
         source:
           repoURL: "{{ app_of_apps.git_repository }}"
-          path: "{{ app_of_apps.git_path }}"
-          targetRevision: "apps"
+          path: "{{ app_of_apps.path }}"
+          targetRevision: "{{ app_of_apps.git_branch }}"
           helm:
             valueFiles:
               - values.yaml
