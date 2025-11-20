@@ -54,11 +54,40 @@
         project: "{{ app_of_apps_defaults.project_name }}"
         source:
           repoURL: "{{ app_of_apps.git_repository }}"
-          path: "{{ app_of_apps.path }}"
-          targetRevision: "{{ app_of_apps.git_branch }}"
+          path: "charts/helper-argocd"
+          targetRevision: "charts"
           helm:
-            valueFiles:
-              - values.yaml
+            values: |
+              global:
+                repoURL: {{ app_of_apps.git_repository }}
+                targetRevision: charts
+                namespace: openshift-gitops
+                syncPolicy:
+                  automated:
+                    prune: true
+                    selfHeal: true
+
+              applications:
+                timezone:
+                  enabled: true
+                  syncWave: "1"
+                  chart:
+                    path: charts/node-timezone
+                tuning:
+                  enabled: true
+                  syncWave: "2"
+                  chart:
+                    path: charts/node-tuning
+                oauth:
+                  enabled: true
+                  syncWave: "3"
+                  chart:
+                    path: charts/cluster-oauth
+                network:
+                  enabled: true
+                  syncWave: "4"
+                  chart:
+                    path: charts/network-nmstate
         destination:
           server: "https://kubernetes.default.svc"
           namespace: "{{ argocd.namespace }}"
