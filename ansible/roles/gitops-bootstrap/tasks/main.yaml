@@ -4,9 +4,7 @@
 
 - name: Display bootstrap banner
   ansible.builtin.debug:
-    msg: |
-      🚀 Bootstrapping GitOps for cluster: {{ cluster_name | default('openshift-cluster') }}
-      📁 GitOps Repository: {{ app_of_apps.git_repository }}
+    msg: "🚀 Bootstrapping GitOps for OpenShift cluster"
   when: display.show_banner | default(true)
 
 - name: Verify OpenShift connection
