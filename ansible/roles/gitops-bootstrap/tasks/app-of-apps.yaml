@@ -9,7 +9,7 @@
       apiVersion: argoproj.io/v1alpha1
       kind: AppProject
       metadata:
-        name: "{{ app_of_apps.project_name }}"
+        name: "{{ app_of_apps_defaults.project_name }}"
         namespace: "{{ argocd.namespace }}"
       spec:
         description: "OpenShift Day-2 Operations Project"
@@ -31,8 +31,8 @@
           - name: admin
             description: "Admin access to Day-2 operations"
             policies:
-              - "p, proj:{{ app_of_apps.project_name }}:admin, applications, *, {{ app_of_apps.project_name }}/*, allow"
-              - "p, proj:{{ app_of_apps.project_name }}:admin, repositories, *, *, allow"
+              - "p, proj:{{ app_of_apps_defaults.project_name }}:admin, applications, *, {{ app_of_apps_defaults.project_name }}/*, allow"
+              - "p, proj:{{ app_of_apps_defaults.project_name }}:admin, repositories, *, *, allow"
             groups:
               - "cluster-admins"
               - "system:cluster-admins"
@@ -44,14 +44,14 @@
       apiVersion: argoproj.io/v1alpha1
       kind: Application
       metadata:
-        name: "{{ app_of_apps.name }}"
+        name: "{{ app_of_apps_defaults.name }}"
         namespace: "{{ argocd.namespace }}"
         annotations:
           argocd.argoproj.io/sync-wave: "1"
         finalizers:
           - resources-finalizer.argocd.argoproj.io
       spec:
-        project: "{{ app_of_apps.project_name }}"
+        project: "{{ app_of_apps_defaults.project_name }}"
         source:
           repoURL: "{{ app_of_apps.git_repository }}"
           path: "{{ app_of_apps.path }}"
@@ -88,11 +88,11 @@
   kubernetes.core.k8s_info:
     api_version: argoproj.io/v1alpha1
     kind: Application
-    name: "{{ app_of_apps.name }}"
+    name: "{{ app_of_apps_defaults.name }}"
     namespace: "{{ argocd.namespace }}"
     wait: true
     wait_timeout: 300
 
 - name: Display App of Apps status
   ansible.builtin.debug:
-    msg: "✅ App of Apps '{{ app_of_apps.name }}' deployed with pure YAML pattern"
+    msg: "✅ App of Apps '{{ app_of_apps_defaults.name }}' deployed successfully"
