@@ -11,8 +11,8 @@ gitops:
 app_of_apps:
   enabled: true
   git_repository: "https://github.com/jeanlopezxyz/cluster-gitops.git"
-  git_branch: "apps"
-  path: "apps/cluster1"
+  git_branch: "charts"
+  path: "charts"
   sync_policy:
     automated: true
     prune: true

@@ -12,7 +12,7 @@ all:
       vars:
         # Cluster configuration
         cluster_name: "telefonica-prod"
-        gitops_repository: "https://dev.azure.com/tch-controlversiones/ocp-v/_git/day2-gitops"
+        gitops_repository: "https://github.com/jeanlopezxyz/cluster-gitops.git"
         
         # Telefonica-specific configuration
         timezone: "America/Santiago"

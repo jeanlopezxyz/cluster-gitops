@@ -15,7 +15,7 @@
         description: "OpenShift Day-2 Operations Project"
         sourceRepos:
           - "{{ app_of_apps.git_repository }}"
-          - "https://charts.stderr.at"
+          - "https://jeanlopezxyz.github.io/cluster-gitops/charts"
         destinations:
           - namespace: "*"
             server: "https://kubernetes.default.svc"
@@ -53,41 +53,12 @@
       spec:
         project: "{{ app_of_apps_defaults.project_name }}"
         source:
-          repoURL: "{{ app_of_apps.git_repository }}"
-          path: "charts/helper-argocd"
-          targetRevision: "charts"
+          repoURL: "https://jeanlopezxyz.github.io/cluster-gitops/charts"
+          chart: "helper-argocd"
+          targetRevision: "1.0.0"
           helm:
-            values: |
-              global:
-                repoURL: {{ app_of_apps.git_repository }}
-                targetRevision: charts
-                namespace: openshift-gitops
-                syncPolicy:
-                  automated:
-                    prune: true
-                    selfHeal: true
-
-              applications:
-                timezone:
-                  enabled: true
-                  syncWave: "1"
-                  chart:
-                    path: charts/node-timezone
-                tuning:
-                  enabled: true
-                  syncWave: "2"
-                  chart:
-                    path: charts/node-tuning
-                oauth:
-                  enabled: true
-                  syncWave: "3"
-                  chart:
-                    path: charts/cluster-oauth
-                network:
-                  enabled: true
-                  syncWave: "4"
-                  chart:
-                    path: charts/network-nmstate
+            valueFiles:
+              - "https://raw.githubusercontent.com/jeanlopezxyz/cluster-gitops/charts/charts/helper-argocd/values-production.yaml"
         destination:
           server: "https://kubernetes.default.svc"
           namespace: "{{ argocd.namespace }}"
