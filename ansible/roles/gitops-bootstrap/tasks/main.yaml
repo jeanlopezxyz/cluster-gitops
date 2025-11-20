@@ -29,10 +29,7 @@
 
 - name: Deploy App of Apps
   ansible.builtin.include_tasks: app-of-apps.yaml
-  when: 
-    - app_of_apps.enabled | default(true)
-    - app_of_apps.git_repository is defined
-    - app_of_apps.git_repository | length > 0
+  when: app_of_apps is defined and app_of_apps.git_repository is defined
 
 - name: Display completion summary
   ansible.builtin.include_tasks: summary.yaml
