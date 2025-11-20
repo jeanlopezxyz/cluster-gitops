@@ -1,0 +1,92 @@
+{{- if and .Values.global.enabled .Values.keyPruner.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Values.keyPruner.name }}
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    {{- include "etcd-backup.labels" . | nindent 4 }}
+    app.kubernetes.io/component: key-pruner
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  schedule: {{ .Values.keyPruner.schedule | quote }}
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    metadata:
+      labels:
+        {{- include "etcd-backup.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: key-pruner
+    spec:
+      template:
+        metadata:
+          labels:
+            {{- include "etcd-backup.selectorLabels" . | nindent 12 }}
+            app.kubernetes.io/component: key-pruner
+        spec:
+          serviceAccountName: {{ .Values.serviceAccount.name }}
+          securityContext:
+            runAsUser: {{ .Values.securityContext.runAsUser }}
+          restartPolicy: OnFailure
+          containers:
+          - name: key-pruner
+            image: {{ .Values.keyPruner.image }}
+            imagePullPolicy: IfNotPresent
+            resources:
+              {{- toYaml .Values.keyPruner.resources | nindent 14 }}
+            securityContext:
+              privileged: {{ .Values.securityContext.privileged }}
+              runAsUser: {{ .Values.securityContext.runAsUser }}
+            command:
+            - /bin/bash
+            - -c
+            - |
+              #!/bin/bash
+              set -euo pipefail
+              
+              # Variables
+              BACKUP_DIR="{{ .Values.backup.mountPath }}"
+              RETENTION_DAYS="{{ .Values.keyPruner.retention }}"
+              
+              echo "Starting key pruning process at $(date)"
+              
+              # Find and process backup directories
+              for backup_dir in $(find $BACKUP_DIR -maxdepth 1 -name 'etcd-backup-*' -type d -mtime +$RETENTION_DAYS); do
+                echo "Processing backup directory: $backup_dir"
+                
+                # Find and remove key files older than retention period
+                find "$backup_dir" -name "*.key" -o -name "*.pem" -o -name "*.crt" | while read keyfile; do
+                  if [ -f "$keyfile" ]; then
+                    echo "Removing key file: $keyfile"
+                    rm -f "$keyfile"
+                  fi
+                done
+                
+                # Remove sensitive data from tar files if they exist
+                for tarfile in $(find "$backup_dir" -name "*.tar.gz" -o -name "*.tar"); do
+                  if [ -f "$tarfile" ]; then
+                    echo "Processing tar file: $tarfile"
+                    # Create a temporary directory
+                    temp_dir=$(mktemp -d)
+                    
+                    # Extract, remove sensitive files, and recreate
+                    tar -xf "$tarfile" -C "$temp_dir" 2>/dev/null || continue
+                    find "$temp_dir" -name "*.key" -o -name "*.pem" -o -name "*.crt" -delete
+                    tar -czf "${tarfile}.new" -C "$temp_dir" . 2>/dev/null || continue
+                    mv "${tarfile}.new" "$tarfile"
+                    rm -rf "$temp_dir"
+                  fi
+                done
+              done
+              
+              echo "Key pruning completed at $(date)"
+            volumeMounts:
+            - name: backup-storage
+              mountPath: {{ .Values.backup.mountPath }}
+          volumes:
+          - name: backup-storage
+            persistentVolumeClaim:
+              claimName: {{ .Values.storage.pvc.name }}
+{{- end }}

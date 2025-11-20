@@ -1,0 +1,130 @@
+# Default values for cluster-monitoring chart
+
+# Global configuration
+global:
+  enabled: true
+
+# Cluster monitoring configuration
+clusterMonitoring:
+  enabled: true
+  # Storage configuration for Prometheus
+  prometheusK8s:
+    retention: "15d"
+    storage:
+      enabled: true
+      size: "100Gi"
+      storageClass: "gp3-csi"
+    resources:
+      requests:
+        cpu: "200m"
+        memory: "2Gi"
+      limits:
+        cpu: "1000m"
+        memory: "4Gi"
+  
+  # Storage configuration for Alertmanager  
+  alertmanager:
+    storage:
+      enabled: true
+      size: "20Gi"
+      storageClass: "gp3-csi"
+    resources:
+      requests:
+        cpu: "50m"
+        memory: "256Mi"
+      limits:
+        cpu: "200m"
+        memory: "512Mi"
+
+  # Grafana configuration
+  grafana:
+    enabled: true
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "256Mi"
+      limits:
+        cpu: "500m"
+        memory: "1Gi"
+
+  # Node exporter configuration
+  nodeExporter:
+    enabled: true
+    resources:
+      requests:
+        cpu: "10m"
+        memory: "32Mi"
+      limits:
+        cpu: "100m"
+        memory: "128Mi"
+
+  # Kube state metrics configuration
+  kubeStateMetrics:
+    enabled: true
+    resources:
+      requests:
+        cpu: "10m"
+        memory: "64Mi"
+      limits:
+        cpu: "100m"
+        memory: "256Mi"
+
+# User workload monitoring configuration
+userWorkloadMonitoring:
+  enabled: true
+  # Storage configuration for user workload Prometheus
+  prometheus:
+    retention: "15d"
+    storage:
+      enabled: true
+      size: "50Gi"
+      storageClass: "gp3-csi"
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "1Gi"
+      limits:
+        cpu: "500m"
+        memory: "2Gi"
+
+  # Thanos ruler configuration
+  thanosRuler:
+    storage:
+      enabled: true
+      size: "10Gi"
+      storageClass: "gp3-csi"
+    resources:
+      requests:
+        cpu: "50m"
+        memory: "256Mi"
+      limits:
+        cpu: "200m"
+        memory: "512Mi"
+
+# Telemetry and remote write configuration
+telemetry:
+  enabled: false
+  # Configure remote write for external systems
+  remoteWrite:
+    enabled: false
+    url: ""
+    basicAuth:
+      username: ""
+      password: ""
+
+# Alerting configuration
+alerting:
+  enabled: true
+  # Configure external alertmanager instances
+  externalAlertmanagers: []
+  #   - namespace: "monitoring"
+  #     name: "external-alertmanager"
+  #     port: 9093
+
+# RBAC for monitoring
+rbac:
+  # Create monitoring readers role
+  monitoringReaders:
+    enabled: true
+    users: []
+    groups: []

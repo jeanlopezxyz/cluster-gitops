@@ -1,0 +1,51 @@
+{{- if .Values.oauth.enabled }}
+apiVersion: config.openshift.io/v1
+kind: OAuth
+metadata:
+  name: cluster
+  labels:
+    {{- include "cluster-oauth.labels" . | nindent 4 }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  identityProviders:
+  {{- if .Values.htpasswd.enabled }}
+  - name: htpasswd_provider
+    mappingMethod: claim
+    type: HTPasswd
+    htpasswd:
+      fileData:
+        name: {{ .Values.htpasswd.secretName }}
+  {{- end }}
+  {{- if .Values.ldap.enabled }}
+  - name: ldap_provider
+    mappingMethod: claim
+    type: LDAP
+    ldap:
+      attributes:
+        id: {{ toYaml .Values.ldap.attributes.id | nindent 8 }}
+        preferredUsername: {{ toYaml .Values.ldap.attributes.preferredUsername | nindent 8 }}
+        name: {{ toYaml .Values.ldap.attributes.name | nindent 8 }}
+        email: {{ toYaml .Values.ldap.attributes.email | nindent 8 }}
+      bindDN: {{ .Values.ldap.server.bindDN | quote }}
+      bindPassword:
+        name: ldap-bind-password
+      insecure: {{ .Values.ldap.server.insecure }}
+      url: {{ .Values.ldap.server.url | quote }}
+      {{- if .Values.ldap.server.ca }}
+      ca:
+        name: ldap-ca-bundle
+      {{- end }}
+  {{- end }}
+  {{- if or .Values.templates.login.enabled .Values.templates.error.enabled }}
+  templates:
+    {{- if .Values.templates.login.enabled }}
+    login:
+      name: login-template
+    {{- end }}
+    {{- if .Values.templates.error.enabled }}
+    error:
+      name: error-template
+    {{- end }}
+  {{- end }}
+{{- end }}

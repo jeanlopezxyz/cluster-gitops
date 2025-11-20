@@ -1,0 +1,21 @@
+apiVersion: v2
+name: cluster-monitoring
+description: Configure OpenShift cluster monitoring and user workload monitoring
+type: application
+version: 0.1.0
+appVersion: "1.0"
+
+keywords:
+  - openshift
+  - monitoring
+  - prometheus
+  - alertmanager
+  - grafana
+  - observability
+
+home: https://github.com/redhat-consulting/openshift-charts
+sources:
+  - https://github.com/redhat-consulting/openshift-charts
+maintainers:
+  - name: Red Hat Consulting
+    email: consulting@redhat.com
