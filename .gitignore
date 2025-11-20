@@ -1,0 +1,20 @@
+# Ansible
+ansible.log
+*.retry
+
+# Helm
+charts/*/charts/
+charts/*/Chart.lock
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.swp
+*~
