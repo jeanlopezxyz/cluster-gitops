@@ -1,0 +1,23 @@
+apiVersion: v2
+name: helper-argocd
+description: Helper chart for creating ArgoCD Applications and AppProjects
+version: 1.0.0
+appVersion: "1.0"
+type: library
+maintainers:
+  - name: Red Hat Consulting
+    email: consulting@redhat.com
+
+home: https://github.com/redhat-consulting/openshift-day2-gitops
+sources:
+  - https://github.com/redhat-consulting/openshift-day2-gitops
+
+keywords:
+  - helper
+  - subchart
+  - gitops
+  - argocd
+  - applications
+
+annotations:
+  category: GitOps

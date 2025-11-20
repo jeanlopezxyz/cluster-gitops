@@ -1,0 +1,9 @@
+htpasswd:
+  enabled: true
+  data: "YWRtaW46JDJ5JDA1JE8uZ3hjWGw3TjBBeTdpUmxCSmtMT2VlSHNPQW9xMlpGdVR5V2FkTFY0c01jLnBMRVlGS20K" # admin:redhat123
+
+rbac:
+  clusterAdmins:
+    enabled: true
+    users:
+      - "admin"
