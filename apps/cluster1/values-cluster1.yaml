@@ -88,7 +88,7 @@ applications:
     chart:
       repoURL: https://jeanlopezxyz.github.io/cluster-gitops/charts
       chart: network-nmstate
-      targetRevision: "1.0.1"
+      targetRevision: "1.0.2"
     destination:
       namespace: openshift-nmstate
     values:
@@ -107,6 +107,8 @@ applications:
               name: "openshift-nmstate"
             operatorgroup:
               create: true
+              targetNamespaces:
+                - "openshift-nmstate"
             subscription:
               operatorName: "kubernetes-nmstate-operator"
               channel: "stable"
