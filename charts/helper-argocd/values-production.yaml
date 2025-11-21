@@ -21,7 +21,7 @@ global:
 # AppProject configuration
 appProject:
   enabled: true
-  name: "day2-operations"
+  name: "operations"
   description: "OpenShift Day-2 Operations Project"
   sourceRepos:
     - "https://github.com/jeanlopezxyz/cluster-gitops.git"
