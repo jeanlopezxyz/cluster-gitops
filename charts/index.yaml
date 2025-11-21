@@ -3,7 +3,7 @@ entries:
   cluster-monitoring:
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-11-20T19:38:35.05852636-05:00"
+    created: "2025-11-20T19:54:39.466659236-05:00"
     description: Configure OpenShift cluster monitoring and user workload monitoring
     digest: 4b51d49774654e752e45c96116f66fb89562e8234b992ae11938f91ef52633f0
     home: https://github.com/redhat-consulting/openshift-charts
@@ -27,7 +27,7 @@ entries:
   cluster-oauth:
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-11-20T19:38:35.058975805-05:00"
+    created: "2025-11-20T19:54:39.466849192-05:00"
     description: Configure OpenShift cluster OAuth authentication providers
     digest: e8e1e5bd1557dbd07d3fd85360a671ca1847a4e2c971c6f5cb067ba613fc5d77
     home: https://github.com/redhat-consulting/openshift-charts
@@ -50,7 +50,7 @@ entries:
   etcd-backup:
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-11-20T19:38:35.059388422-05:00"
+    created: "2025-11-20T19:54:39.467169477-05:00"
     description: Create a CronJob that performs ETCD Backup and stores the backup
       to a PV for OpenShift clusters
     digest: 9718dc1d58efad9083dd1d124cf94e152e224b9332d554c5c07ddd10a938c19f
@@ -77,9 +77,9 @@ entries:
       category: GitOps
     apiVersion: v2
     appVersion: "1.0"
-    created: "2025-11-20T19:38:35.059577606-05:00"
+    created: "2025-11-20T19:54:39.467616156-05:00"
     description: Helper chart for creating ArgoCD Applications and AppProjects
-    digest: f4d2178a38857eda771f14c7a5d41ba6701afe9ef155ca0a81958aaf47e753ce
+    digest: 066949847226bf7060d175b440065269fe38e00947a38d63bbf1fe7af62d6e00
     home: https://github.com/redhat-consulting/openshift-day2-gitops
     keywords:
     - helper
@@ -102,7 +102,7 @@ entries:
       category: Operators
     apiVersion: v2
     appVersion: "1.0"
-    created: "2025-11-20T19:38:35.059715706-05:00"
+    created: "2025-11-20T19:54:39.467779069-05:00"
     description: Helper chart for installing OpenShift Operators
     digest: 70282005637c207a0239106e7772f299a24c50ca7e0c07a45a0d9c3e0d8e1455
     home: https://github.com/redhat-consulting/openshift-day2-gitops
@@ -125,7 +125,7 @@ entries:
   network-nmstate:
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-11-20T19:38:35.060078277-05:00"
+    created: "2025-11-20T19:54:39.468111161-05:00"
     dependencies:
     - name: helper-operator
       repository: https://jeanlopezxyz.github.io/cluster-gitops/charts
@@ -153,7 +153,7 @@ entries:
   node-timezone:
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-11-20T19:38:35.060252141-05:00"
+    created: "2025-11-20T19:54:39.468312095-05:00"
     description: Configure timezone for OpenShift nodes using MachineConfig
     digest: db9dcb23f8f6b9cb21ba3be9ccb842a3ceab1b41fc59cb276c123d403bed27d0
     home: https://github.com/redhat-consulting/openshift-charts
@@ -174,7 +174,7 @@ entries:
   node-tuning:
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-11-20T19:38:35.060408683-05:00"
+    created: "2025-11-20T19:54:39.46845921-05:00"
     description: Configure OpenShift node tuning parameters (max pods, system reserved
       resources)
     digest: 59d1442a54c432543bf6a6274b0be8722c910ee95b911bb95aa085a31b056ba6
@@ -195,4 +195,4 @@ entries:
     urls:
     - https://jeanlopezxyz.github.io/cluster-gitops/charts/node-tuning-1.0.0.tgz
     version: 1.0.0
-generated: "2025-11-20T19:38:35.058153714-05:00"
+generated: "2025-11-20T19:54:39.466303028-05:00"

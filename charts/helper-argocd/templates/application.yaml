@@ -20,7 +20,11 @@ spec:
   source:
     {{- if $app.chart }}
     repoURL: {{ $app.chart.repoURL }}
+    {{- if $app.chart.chart }}
+    chart: {{ $app.chart.chart }}
+    {{- else }}
     path: {{ $app.chart.path }}
+    {{- end }}
     targetRevision: {{ $app.chart.targetRevision | default "HEAD" }}
     {{- if $app.values }}
     helm:
