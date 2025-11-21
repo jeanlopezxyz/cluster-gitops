@@ -3,7 +3,7 @@ entries:
   cluster-monitoring:
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-11-20T20:27:36.938731517-05:00"
+    created: "2025-11-21T08:31:47.51857667-05:00"
     description: Configure OpenShift cluster monitoring and user workload monitoring
     digest: 4b51d49774654e752e45c96116f66fb89562e8234b992ae11938f91ef52633f0
     home: https://github.com/redhat-consulting/openshift-charts
@@ -27,7 +27,7 @@ entries:
   cluster-oauth:
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-11-20T20:27:36.938933298-05:00"
+    created: "2025-11-21T08:31:47.51877064-05:00"
     description: Configure OpenShift cluster OAuth authentication providers
     digest: e8e1e5bd1557dbd07d3fd85360a671ca1847a4e2c971c6f5cb067ba613fc5d77
     home: https://github.com/redhat-consulting/openshift-charts
@@ -50,7 +50,7 @@ entries:
   etcd-backup:
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-11-20T20:27:36.939224872-05:00"
+    created: "2025-11-21T08:31:47.519008067-05:00"
     description: Create a CronJob that performs ETCD Backup and stores the backup
       to a PV for OpenShift clusters
     digest: 9718dc1d58efad9083dd1d124cf94e152e224b9332d554c5c07ddd10a938c19f
@@ -77,7 +77,7 @@ entries:
       category: GitOps
     apiVersion: v2
     appVersion: "1.0"
-    created: "2025-11-20T20:27:36.939428213-05:00"
+    created: "2025-11-21T08:31:47.519167285-05:00"
     description: Helper chart for creating ArgoCD Applications and AppProjects
     digest: 066949847226bf7060d175b440065269fe38e00947a38d63bbf1fe7af62d6e00
     home: https://github.com/redhat-consulting/openshift-day2-gitops
@@ -102,9 +102,9 @@ entries:
       category: Operators
     apiVersion: v2
     appVersion: "1.0"
-    created: "2025-11-20T20:27:36.939550488-05:00"
+    created: "2025-11-21T08:31:47.519291705-05:00"
     description: Helper chart for installing OpenShift Operators
-    digest: 70282005637c207a0239106e7772f299a24c50ca7e0c07a45a0d9c3e0d8e1455
+    digest: 5224d25a0b4cc752e58d82919210cd4e388a8c8a043e658d8b675336a866fc30
     home: https://github.com/redhat-consulting/openshift-day2-gitops
     keywords:
     - helper
@@ -125,7 +125,7 @@ entries:
   network-nmstate:
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-11-20T20:27:36.940388421-05:00"
+    created: "2025-11-21T08:31:47.519942513-05:00"
     dependencies:
     - name: helper-operator
       repository: https://jeanlopezxyz.github.io/cluster-gitops/charts
@@ -152,13 +152,13 @@ entries:
     version: 1.0.1
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-11-20T20:27:36.939928405-05:00"
+    created: "2025-11-21T08:31:47.519662644-05:00"
     dependencies:
     - name: helper-operator
       repository: https://jeanlopezxyz.github.io/cluster-gitops/charts
       version: 1.0.0
     description: Deploy NMState operator and configure node network policies for OpenShift
-    digest: abe6550518d73a627b0e3b813d1d8b7cefc26707e24d091f212fead61954191e
+    digest: 133e61c6bf0ef43ac7a6ff9d5bf94f380b46fc213b8dcd89d6d67fbb044afe43
     home: https://github.com/redhat-consulting/openshift-charts
     keywords:
     - openshift
@@ -180,7 +180,7 @@ entries:
   node-timezone:
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-11-20T20:27:36.9408153-05:00"
+    created: "2025-11-21T08:31:47.520056664-05:00"
     description: Configure timezone for OpenShift nodes using MachineConfig
     digest: db9dcb23f8f6b9cb21ba3be9ccb842a3ceab1b41fc59cb276c123d403bed27d0
     home: https://github.com/redhat-consulting/openshift-charts
@@ -201,7 +201,7 @@ entries:
   node-tuning:
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2025-11-20T20:27:36.94111507-05:00"
+    created: "2025-11-21T08:31:47.520189715-05:00"
     description: Configure OpenShift node tuning parameters (max pods, system reserved
       resources)
     digest: 59d1442a54c432543bf6a6274b0be8722c910ee95b911bb95aa085a31b056ba6
@@ -222,4 +222,4 @@ entries:
     urls:
     - https://jeanlopezxyz.github.io/cluster-gitops/charts/node-tuning-1.0.0.tgz
     version: 1.0.0
-generated: "2025-11-20T20:27:36.938305558-05:00"
+generated: "2025-11-21T08:31:47.518227778-05:00"
