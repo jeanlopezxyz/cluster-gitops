@@ -13,7 +13,7 @@ spec:
     targetRevision: "1.0.0"
     helm:
       valueFiles:
-        - https://raw.githubusercontent.com/jeanlopezxyz/cluster-gitops/charts/charts/helper-argocd/values-production.yaml
+        - https://raw.githubusercontent.com/jeanlopezxyz/cluster-gitops/gitops/apps/cluster1/values-cluster1.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: openshift-gitops
