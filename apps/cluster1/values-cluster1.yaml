@@ -114,7 +114,7 @@ applications:
               sourceNamespace: "openshift-marketplace"
               approval: "Automatic"
       nmstate:
-        enabled: true
+        enabled: false
         name: "nmstate"
       # Telefonica Chile specific network configuration
       networkPolicies:
