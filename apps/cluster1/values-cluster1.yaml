@@ -41,9 +41,9 @@ applications:
     enabled: true
     syncWave: "1"
     chart:
-      repoURL: https://github.com/jeanlopezxyz/cluster-gitops.git
-      path: charts/node-timezone
-      targetRevision: charts
+      repoURL: https://jeanlopezxyz.github.io/cluster-gitops/charts
+      chart: node-timezone
+      targetRevision: "1.0.0"
     destination:
       namespace: default
     values:
@@ -56,9 +56,9 @@ applications:
     enabled: true
     syncWave: "2"
     chart:
-      repoURL: https://github.com/jeanlopezxyz/cluster-gitops.git
-      path: charts/node-tuning
-      targetRevision: charts
+      repoURL: https://jeanlopezxyz.github.io/cluster-gitops/charts
+      chart: node-tuning
+      targetRevision: "1.0.0"
     destination:
       namespace: default
     values:
@@ -71,9 +71,9 @@ applications:
     enabled: true
     syncWave: "3"
     chart:
-      repoURL: https://github.com/jeanlopezxyz/cluster-gitops.git
-      path: charts/cluster-oauth
-      targetRevision: charts
+      repoURL: https://jeanlopezxyz.github.io/cluster-gitops/charts
+      chart: cluster-oauth
+      targetRevision: "1.0.0"
     destination:
       namespace: default
     values:
@@ -86,22 +86,22 @@ applications:
     enabled: true
     syncWave: "4"
     chart:
-      repoURL: https://github.com/jeanlopezxyz/cluster-gitops.git
-      path: charts/network-nmstate
-      targetRevision: charts
+      repoURL: https://jeanlopezxyz.github.io/cluster-gitops/charts
+      chart: network-nmstate
+      targetRevision: "1.0.0"
     destination:
       namespace: openshift-nmstate
     values:
       global:
         enabled: true
-        syncwave: "1"
+        syncwave: "0"
       helper-operator:
         global:
-          syncwave: "1"
+          syncwave: "0"
         operators:
           nmstate:
             enabled: true
-            syncwave: "1"
+            syncwave: "0"
             namespace:
               create: true
               name: "openshift-nmstate"
@@ -136,3 +136,65 @@ applications:
           - 371
           - 372
           - 376
+
+  monitoring:
+    enabled: true
+    syncWave: "5"
+    chart:
+      repoURL: https://jeanlopezxyz.github.io/cluster-gitops/charts
+      chart: cluster-monitoring
+      targetRevision: "1.0.0"
+    destination:
+      namespace: openshift-monitoring
+    values:
+      global:
+        enabled: true
+      clusterMonitoring:
+        enabled: true
+        prometheusK8s:
+          retention: "15d"
+          storage:
+            enabled: true
+            size: "100Gi"
+            storageClass: "gp3-csi"
+        alertmanager:
+          storage:
+            enabled: true
+            size: "20Gi"
+            storageClass: "gp3-csi"
+      userWorkloadMonitoring:
+        enabled: true
+        prometheus:
+          retention: "15d"
+          storage:
+            enabled: true
+            size: "50Gi"
+            storageClass: "gp3-csi"
+
+  backup:
+    enabled: true
+    syncWave: "6"
+    chart:
+      repoURL: https://jeanlopezxyz.github.io/cluster-gitops/charts
+      chart: etcd-backup
+      targetRevision: "1.0.0"
+    destination:
+      namespace: etcd-backup
+    values:
+      global:
+        enabled: true
+      namespace:
+        create: true
+        name: "etcd-backup"
+      storage:
+        pvc:
+          size: "100Gi"
+          storageClass: "gp3-csi"
+      backup:
+        enabled: true
+        schedule: "0 */4 * * *"
+        retention: 30
+      keyPruner:
+        enabled: true
+        schedule: "55 */6 * * *"
+        retention: 30
