@@ -140,7 +140,7 @@ applications:
           - 376
 
   monitoring:
-    enabled: false
+    enabled: true
     syncWave: "5"
     chart:
       repoURL: https://jeanlopezxyz.github.io/cluster-gitops/charts
