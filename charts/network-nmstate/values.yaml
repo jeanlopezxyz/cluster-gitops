@@ -69,7 +69,8 @@ networkPolicies:
     #     mode: "802.3ad"
     #     slaves: ["ens3", "ens4"]
 
-  # VLAN interfaces
+  # VLAN interfaces (as objects with name, type, state)
+  vlansConfigured: false
   vlans: []
     # - name: "bond0.270"
     #   type: "vlan"
