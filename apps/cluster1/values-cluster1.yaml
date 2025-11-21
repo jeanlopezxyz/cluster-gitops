@@ -143,7 +143,7 @@ applications:
     enabled: true
     syncWave: "5"
     chart:
-      repoURL: https://jeanlopezxyz.github.io/cluster-gitops/charts
+      repoURL: "https://jeanlopezxyz.github.io/cluster-gitops/charts?v=1701428341"
       chart: cluster-monitoring
       targetRevision: "1.0.1"
     destination:
