@@ -145,7 +145,7 @@ applications:
     chart:
       repoURL: https://jeanlopezxyz.github.io/cluster-gitops/charts
       chart: cluster-monitoring
-      targetRevision: "1.0.0"
+      targetRevision: "1.0.1"
     destination:
       namespace: openshift-monitoring
     values:
