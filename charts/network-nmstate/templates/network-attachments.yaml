@@ -15,7 +15,7 @@ metadata:
     purpose: "openshift-virtualization"
     {{- include "network-nmstate.labels" $ | nindent 4 }}
   annotations:
-    argocd.argoproj.io/sync-wave: "4"
+    argocd.argoproj.io/sync-wave: "20"
 spec:
   config: |
     {
@@ -43,7 +43,7 @@ metadata:
   labels:
     {{- include "network-nmstate.labels" $ | nindent 4 }}
   annotations:
-    argocd.argoproj.io/sync-wave: "4"
+    argocd.argoproj.io/sync-wave: "20"
 spec:
   config: {{ .config | quote }}
 {{- end }}
