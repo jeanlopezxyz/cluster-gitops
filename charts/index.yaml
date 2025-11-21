@@ -5,7 +5,7 @@ entries:
       category: GitOps
     apiVersion: v2
     appVersion: "1.0"
-    created: "2025-11-20T19:26:55.224784972-05:00"
+    created: "2025-11-20T19:32:59.509168862-05:00"
     description: Helper chart for creating ArgoCD Applications and AppProjects
     digest: f4d2178a38857eda771f14c7a5d41ba6701afe9ef155ca0a81958aaf47e753ce
     home: https://github.com/redhat-consulting/openshift-day2-gitops
@@ -30,7 +30,7 @@ entries:
       category: Operators
     apiVersion: v2
     appVersion: "1.0"
-    created: "2025-11-20T19:26:55.224907271-05:00"
+    created: "2025-11-20T19:32:59.509295866-05:00"
     description: Helper chart for installing OpenShift Operators
     digest: 70282005637c207a0239106e7772f299a24c50ca7e0c07a45a0d9c3e0d8e1455
     home: https://github.com/redhat-consulting/openshift-day2-gitops
@@ -50,4 +50,4 @@ entries:
     urls:
     - https://jeanlopezxyz.github.io/cluster-gitops/charts/helper-operator-1.0.0.tgz
     version: 1.0.0
-generated: "2025-11-20T19:26:55.224533879-05:00"
+generated: "2025-11-20T19:32:59.508900011-05:00"

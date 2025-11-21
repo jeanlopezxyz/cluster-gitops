@@ -8,12 +8,12 @@ global:
 # Helper operator configuration for NMState operator installation
 helper-operator:
   global:
-    syncwave: "1"
+    syncwave: "0"
   
   operators:
     nmstate:
       enabled: true
-      syncwave: "1"
+      syncwave: "0"
       namespace:
         create: true
         name: "openshift-nmstate"

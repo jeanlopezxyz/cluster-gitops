@@ -8,7 +8,7 @@ metadata:
   labels:
     {{- include "network-nmstate.labels" $ | nindent 4 }}
   annotations:
-    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/sync-wave: "4"
 spec:
   desiredState:
     interfaces:
@@ -65,7 +65,7 @@ metadata:
   labels:
     {{- include "network-nmstate.labels" $ | nindent 4 }}
   annotations:
-    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/sync-wave: "4"
 spec:
   desiredState:
     interfaces:
@@ -95,7 +95,7 @@ metadata:
   labels:
     {{- include "network-nmstate.labels" $ | nindent 4 }}
   annotations:
-    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/sync-wave: "4"
 spec:
   desiredState:
     interfaces:
@@ -126,7 +126,7 @@ metadata:
   labels:
     {{- include "network-nmstate.labels" $ | nindent 4 }}
   annotations:
-    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/sync-wave: "4"
 spec:
   {{- if .nodeSelector }}
   nodeSelector:
