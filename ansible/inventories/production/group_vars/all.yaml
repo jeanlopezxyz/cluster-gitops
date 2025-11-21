@@ -1,0 +1,24 @@
+# Global variables for OpenShift Day-2 Operations
+# Red Hat Consulting
+
+# GitOps Configuration (only what Ansible needs for bootstrap)
+gitops:
+  operator_channel: "latest"
+  namespace: "openshift-gitops"
+  wait_timeout: 600
+
+# App of Apps Configuration
+app_of_apps:
+  enabled: true
+  git_repository: "https://github.com/jeanlopezxyz/cluster-gitops.git"
+  git_branch: "charts"
+  path: "charts"
+  sync_policy:
+    automated: true
+    prune: true
+    self_heal: true
+
+# Display Configuration
+display:
+  show_banner: true
+  show_completion: true
