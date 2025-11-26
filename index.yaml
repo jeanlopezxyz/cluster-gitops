@@ -1,0 +1,53 @@
+apiVersion: v1
+entries:
+  helper-argocd:
+  - annotations:
+      category: GitOps
+    apiVersion: v2
+    appVersion: "1.0"
+    created: "2025-11-20T19:09:27.203064262-05:00"
+    description: Helper chart for creating ArgoCD Applications and AppProjects
+    digest: 24a90144406213b4c1ba428509460310405c7068380bce1a7646fc16d7cf357d
+    home: https://github.com/redhat-consulting/openshift-day2-gitops
+    keywords:
+    - helper
+    - subchart
+    - gitops
+    - argocd
+    - applications
+    maintainers:
+    - email: consulting@redhat.com
+      name: Red Hat Consulting
+    name: helper-argocd
+    sources:
+    - https://github.com/redhat-consulting/openshift-day2-gitops
+    type: application
+    urls:
+    - https://jeanlopezxyz.github.io/cluster-gitops/charts/helper-argocd-1.0.0.tgz
+    version: 1.0.0
+  helper-operator:
+  - annotations:
+      category: Operators
+    apiVersion: v2
+    appVersion: "1.0"
+    created: "2025-11-20T19:09:27.203202692-05:00"
+    description: Helper chart for installing OpenShift Operators
+    digest: 1e9d46ff6e3229c35b776250629f34f42f111e39929f9c21fa2ebd0b9acb3a0f
+    home: https://github.com/redhat-consulting/openshift-day2-gitops
+    keywords:
+    - helper
+    - subchart
+    - operator
+    - openshift
+    - olm
+    maintainers:
+    - email: consulting@redhat.com
+      name: Red Hat Consulting
+    name: helper-operator
+    sources:
+    - https://github.com/redhat-consulting/openshift-day2-gitops
+    type: application
+    urls:
+    - https://jeanlopezxyz.github.io/cluster-gitops/charts/helper-operator-1.0.0.tgz
+    version: 1.0.0
+generated: "2025-11-20T19:09:27.202773432-05:00"
