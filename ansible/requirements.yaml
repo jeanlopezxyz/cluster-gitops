@@ -20,9 +20,5 @@ collections:
     version: ">=2.0.0"
     source: https://galaxy.ansible.com
 
-  - name: containers.podman
-    version: ">=1.10.0"
-    source: https://galaxy.ansible.com
-
 # Roles (if any external roles are needed)
 roles: []

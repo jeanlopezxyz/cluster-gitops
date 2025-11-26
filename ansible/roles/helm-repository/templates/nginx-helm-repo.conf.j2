@@ -1,0 +1,18 @@
+# Nginx configuration for Helm Chart Repository
+# Managed by Ansible - Do not edit manually
+
+server {
+    listen {{ helm_repo.port }};
+    server_name _;
+
+    root {{ helm_repo.document_root }};
+    autoindex on;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    # Enable gzip for chart files
+    gzip on;
+    gzip_types application/x-tar application/gzip;
+}

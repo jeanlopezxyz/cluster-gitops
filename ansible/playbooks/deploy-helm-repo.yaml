@@ -1,41 +1,35 @@
 ---
-# Deploy Helm Repository on Bastion
+# Deploy Helm Repository on Bastion (Nginx-based)
 # Red Hat Consulting
 
 - name: Deploy Helm Chart Repository on Bastion
   hosts: bastion
   gather_facts: true
 
-  vars:
-    bastion_host: "{{ ansible_host }}"
-
   pre_tasks:
-    - name: Verify we are running on bastion
+    - name: Verify target host
       ansible.builtin.debug:
-        msg: "🚀 Deploying Helm repository on {{ inventory_hostname }}"
+        msg: "🚀 Deploying Helm repository on {{ inventory_hostname }} ({{ ansible_host }})"
 
   roles:
     - helm-repository
 
   post_tasks:
-    - name: Display Helm repository information
+    - name: Display repository information
       ansible.builtin.debug:
         msg: |
           ========================================
-          ✅ Helm Repository Deployed!
+          ✅ Helm Repository Ready!
           ========================================
 
           📍 Repository URL:
-            http://{{ bastion_host }}:{{ helm_repo.chartmuseum.port }}/charts
+            http://{{ ansible_host }}:{{ helm_repo.port }}
 
           📝 To add this repository:
-            helm repo add day2-charts http://{{ bastion_host }}:{{ helm_repo.chartmuseum.port }}/charts
+            helm repo add day2-charts http://{{ ansible_host }}:{{ helm_repo.port }}
             helm repo update
 
-          🔍 To verify charts:
+          🔍 To verify:
             helm search repo day2-charts
-
-          📦 API endpoint:
-            http://{{ bastion_host }}:{{ helm_repo.chartmuseum.port }}/api/charts
 
           ========================================
