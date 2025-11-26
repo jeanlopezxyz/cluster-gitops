@@ -1,15 +1,8 @@
 ---
 # Handlers for helm-repository role
-# Red Hat Consulting
 
-- name: Restart nginx
+- name: Restart httpd
   ansible.builtin.systemd:
-    name: nginx
+    name: httpd
     state: restarted
-  become: true
-
-- name: Reload firewalld
-  ansible.builtin.systemd:
-    name: firewalld
-    state: reloaded
   become: true

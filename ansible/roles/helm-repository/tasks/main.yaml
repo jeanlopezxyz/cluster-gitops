@@ -1,16 +1,10 @@
 ---
-# Main tasks for helm-repository role
-# Red Hat Consulting - Simple Nginx-based Helm Repository
+# Helm repository with httpd (Apache)
+# Red Hat Consulting
 
-- name: Display Helm repository setup banner
-  ansible.builtin.debug:
-    msg: "📦 Setting up Helm Chart Repository on bastion"
-
-- name: Install Nginx
+- name: Install httpd
   ansible.builtin.dnf:
-    name:
-      - nginx
-      - firewalld
+    name: httpd
     state: present
   become: true
 
@@ -19,90 +13,88 @@
     path: "{{ helm_repo.document_root }}"
     state: directory
     mode: "0755"
-    owner: nginx
-    group: nginx
+    owner: apache
+    group: apache
+    setype: httpd_sys_content_t
   become: true
 
-- name: Find all packaged charts
+- name: Find packaged charts
   ansible.builtin.find:
     paths: "{{ helm_repo.charts_source_dir }}"
     patterns: "*.tgz"
-    recurse: false
   register: chart_packages
   delegate_to: localhost
 
-- name: Copy charts to web directory
+- name: Copy charts
   ansible.builtin.copy:
     src: "{{ item.path }}"
     dest: "{{ helm_repo.document_root }}/"
     mode: "0644"
-    owner: nginx
-    group: nginx
+    owner: apache
+    group: apache
+    setype: httpd_sys_content_t
   loop: "{{ chart_packages.files }}"
   become: true
 
-- name: Copy index.yaml if exists
+- name: Copy index.yaml
   ansible.builtin.copy:
     src: "{{ helm_repo.charts_source_dir }}/index.yaml"
     dest: "{{ helm_repo.document_root }}/index.yaml"
     mode: "0644"
-    owner: nginx
-    group: nginx
+    owner: apache
+    group: apache
+    setype: httpd_sys_content_t
   become: true
   ignore_errors: true
 
-- name: Configure Nginx for Helm repository
-  ansible.builtin.template:
-    src: nginx-helm-repo.conf.j2
-    dest: /etc/nginx/conf.d/helm-repo.conf
+- name: Configure httpd virtual host
+  ansible.builtin.copy:
+    dest: /etc/httpd/conf.d/helm-repo.conf
     mode: "0644"
+    content: |
+      Listen {{ helm_repo.port }}
+      <VirtualHost *:{{ helm_repo.port }}>
+          DocumentRoot {{ helm_repo.document_root }}
+          <Directory {{ helm_repo.document_root }}>
+              Options Indexes FollowSymLinks
+              AllowOverride None
+              Require all granted
+          </Directory>
+      </VirtualHost>
   become: true
-  notify: Restart nginx
-
-- name: Ensure firewalld is running
-  ansible.builtin.systemd:
-    name: firewalld
-    state: started
-    enabled: true
-  become: true
-  when: firewall.enabled | default(true)
+  notify: Restart httpd
 
 - name: Open firewall port
   ansible.posix.firewalld:
     port: "{{ helm_repo.port }}/tcp"
     permanent: true
     state: enabled
-    zone: "{{ firewall.zone | default('public') }}"
+    immediate: true
   become: true
   when: firewall.enabled | default(true)
-  notify: Reload firewalld
 
-- name: Enable and start Nginx
+- name: Start httpd
   ansible.builtin.systemd:
-    name: nginx
+    name: httpd
     state: started
     enabled: true
   become: true
 
-- name: Generate Helm index if not exists
+- name: Generate Helm index
   ansible.builtin.command:
-    cmd: >
-      helm repo index {{ helm_repo.document_root }}
-      --url http://{{ ansible_host | default('localhost') }}:{{ helm_repo.port }}
+    cmd: helm repo index {{ helm_repo.document_root }} --url http://{{ ansible_host }}:{{ helm_repo.port }}
   become: true
   changed_when: true
 
-- name: Set correct permissions on index.yaml
+- name: Fix index.yaml permissions
   ansible.builtin.file:
     path: "{{ helm_repo.document_root }}/index.yaml"
     mode: "0644"
-    owner: nginx
-    group: nginx
+    owner: apache
+    group: apache
+    setype: httpd_sys_content_t
   become: true
 
-- name: Display completion message
+- name: Show repository URL
   ansible.builtin.debug:
-    msg: |
-      ✅ Helm Repository configured!
-      📍 URL: http://{{ ansible_host | default('localhost') }}:{{ helm_repo.port }}
-      📝 Add repo: helm repo add day2-charts http://{{ ansible_host | default('localhost') }}:{{ helm_repo.port }}
+    msg: "✅ Helm repo: http://{{ ansible_host }}:{{ helm_repo.port }}"
