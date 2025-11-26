@@ -1,0 +1,20 @@
+{{- if .Values.global.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.storage.pvc.name }}
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    {{- include "etcd-backup.labels" . | nindent 4 }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  accessModes:
+    - {{ .Values.storage.pvc.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.storage.pvc.size }}
+  {{- if .Values.storage.pvc.storageClass }}
+  storageClassName: {{ .Values.storage.pvc.storageClass }}
+  {{- end }}
+{{- end }}

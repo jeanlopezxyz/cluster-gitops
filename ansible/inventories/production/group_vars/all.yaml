@@ -1,0 +1,36 @@
+# Global variables for OpenShift Day-2 Operations
+# Red Hat Consulting
+
+# GitOps Configuration (only what Ansible needs for bootstrap)
+gitops:
+  operator_channel: "latest"
+  namespace: "openshift-gitops"
+  wait_timeout: 600
+
+# Bastion Helm Repository Configuration
+# Set bastion_helm_repo_url to your bastion server URL
+# Example: http://bastion.example.com:8080/charts
+bastion_helm_repo_url: "http://{{ bastion_ip | default('localhost') }}:8080/charts"
+
+# App of Apps Configuration
+app_of_apps:
+  enabled: true
+  # Helm repository for charts (use bastion or GitHub Pages)
+  # For bastion: "{{ bastion_helm_repo_url }}"
+  # For GitHub Pages: "https://jeanlopezxyz.github.io/cluster-gitops/charts"
+  helm_repo: "{{ bastion_helm_repo_url }}"
+  # Git repository for values files
+  git_repository: "https://github.com/jeanlopezxyz/cluster-gitops.git"
+  git_branch: "gitops"
+  # Cluster-specific configuration
+  cluster_name: "cluster1"
+  values_path: "apps/cluster1/values-cluster1.yaml"
+  sync_policy:
+    automated: true
+    prune: true
+    self_heal: true
+
+# Display Configuration
+display:
+  show_banner: true
+  show_completion: true

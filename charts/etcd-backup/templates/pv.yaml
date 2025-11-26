@@ -1,0 +1,23 @@
+{{- if and .Values.global.enabled .Values.storage.pv.enabled }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Values.storage.pv.name }}
+  labels:
+    {{- include "etcd-backup.labels" . | nindent 4 }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  capacity:
+    storage: {{ .Values.storage.pv.size }}
+  accessModes:
+    - {{ .Values.storage.pv.accessMode }}
+  {{- if .Values.storage.pv.storageClass }}
+  storageClassName: {{ .Values.storage.pv.storageClass }}
+  {{- end }}
+  {{- if and .Values.storage.pv.nfs.server .Values.storage.pv.nfs.path }}
+  nfs:
+    server: {{ .Values.storage.pv.nfs.server }}
+    path: {{ .Values.storage.pv.nfs.path }}
+  {{- end }}
+{{- end }}

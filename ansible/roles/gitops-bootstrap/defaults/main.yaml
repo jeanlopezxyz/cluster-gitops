@@ -1,0 +1,27 @@
+---
+# Default variables for gitops-bootstrap role
+
+# GitOps Operator Configuration
+gitops_operator:
+  name: "openshift-gitops-operator"
+  namespace: "openshift-gitops-operator"
+  channel: "{{ gitops.operator_channel | default('latest') }}"
+  source: "redhat-operators"
+  source_namespace: "openshift-marketplace"
+
+# ArgoCD Configuration
+argocd:
+  name: "openshift-gitops"
+  namespace: "openshift-gitops"
+  enable_cluster_admin: true
+
+# App of Apps defaults
+app_of_apps_defaults:
+  name: "bootstrap"
+  project_name: "operations"
+
+# Timeouts
+timeouts:
+  wait_timeout: "{{ gitops.wait_timeout | default(600) }}"
+  operator_timeout: 300
+  argocd_timeout: 480

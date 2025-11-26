@@ -1,0 +1,26 @@
+apiVersion: v2
+name: network-nmstate
+description: Deploy NMState operator and configure node network policies for OpenShift
+type: application
+version: 1.0.0
+appVersion: "1.0"
+
+
+dependencies:
+  - name: helper-operator
+    version: "1.0.0"
+    repository: "https://jeanlopezxyz.github.io/cluster-gitops/charts"
+
+keywords:
+  - openshift
+  - nmstate
+  - networking
+  - operator
+  - bridge
+  - bond
+home: https://github.com/redhat-consulting/openshift-charts
+sources:
+  - https://github.com/redhat-consulting/openshift-charts
+maintainers:
+  - name: Red Hat Consulting
+    email: consulting@redhat.com

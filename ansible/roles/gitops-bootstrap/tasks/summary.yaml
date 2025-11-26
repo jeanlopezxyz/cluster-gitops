@@ -1,0 +1,38 @@
+---
+# Display completion summary
+# Red Hat Consulting
+
+- name: Get ArgoCD route for summary
+  kubernetes.core.k8s_info:
+    api_version: route.openshift.io/v1
+    kind: Route
+    name: openshift-gitops-server
+    namespace: "{{ argocd.namespace }}"
+  register: argocd_route_summary
+
+- name: Display completion summary
+  ansible.builtin.debug:
+    msg: |
+      ========================================
+      ✅ GitOps Bootstrap Complete!
+      ========================================
+
+      🌐 ArgoCD Access:
+        URL: https://{{ argocd_route_summary.resources[0].spec.host }}
+        Username: admin (use OpenShift login)
+
+      📝 Next Steps:
+        1. Access ArgoCD UI
+        2. Monitor '{{ app_of_apps_defaults.name }}-{{ app_of_apps.cluster_name }}' application
+        3. GitOps will deploy Day-2 applications automatically
+
+      🔄 GitOps Pattern:
+        Ansible: ✅ GitOps bootstrap complete
+        ArgoCD: 🎯 Now manages all applications
+
+      📁 Configuration:
+        Helm Repository: {{ app_of_apps.helm_repo }}
+        Git Repository: {{ app_of_apps.git_repository }}
+        Branch: {{ app_of_apps.git_branch }}
+        Values: {{ app_of_apps.values_path }}
+      ========================================

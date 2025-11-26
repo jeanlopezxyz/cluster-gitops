@@ -1,0 +1,248 @@
+apiVersion: v1
+entries:
+  cluster-monitoring:
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2025-11-21T09:12:21.067461311-05:00"
+    description: Configure OpenShift cluster monitoring and user workload monitoring
+    digest: 5f9ddbb19ddc7cdea9747a747b958ff06f0f9c6e6b763b30b75c8aa845464e29
+    home: https://github.com/redhat-consulting/openshift-charts
+    keywords:
+    - openshift
+    - monitoring
+    - prometheus
+    - alertmanager
+    - grafana
+    - observability
+    maintainers:
+    - email: consulting@redhat.com
+      name: Red Hat Consulting
+    name: cluster-monitoring
+    sources:
+    - https://github.com/redhat-consulting/openshift-charts
+    type: application
+    urls:
+    - https://jeanlopezxyz.github.io/cluster-gitops/charts/cluster-monitoring-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2025-11-21T09:12:21.067196205-05:00"
+    description: Configure OpenShift cluster monitoring and user workload monitoring
+    digest: eadd1de72e99d8b9567f8ebf109b78c4e25b7fcabb63930e73680688f9ca8531
+    home: https://github.com/redhat-consulting/openshift-charts
+    keywords:
+    - openshift
+    - monitoring
+    - prometheus
+    - alertmanager
+    - grafana
+    - observability
+    maintainers:
+    - email: consulting@redhat.com
+      name: Red Hat Consulting
+    name: cluster-monitoring
+    sources:
+    - https://github.com/redhat-consulting/openshift-charts
+    type: application
+    urls:
+    - https://jeanlopezxyz.github.io/cluster-gitops/charts/cluster-monitoring-1.0.0.tgz
+    version: 1.0.0
+  cluster-oauth:
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2025-11-21T09:12:21.067637948-05:00"
+    description: Configure OpenShift cluster OAuth authentication providers
+    digest: e8e1e5bd1557dbd07d3fd85360a671ca1847a4e2c971c6f5cb067ba613fc5d77
+    home: https://github.com/redhat-consulting/openshift-charts
+    keywords:
+    - openshift
+    - oauth
+    - authentication
+    - htpasswd
+    - ldap
+    maintainers:
+    - email: consulting@redhat.com
+      name: Red Hat Consulting
+    name: cluster-oauth
+    sources:
+    - https://github.com/redhat-consulting/openshift-charts
+    type: application
+    urls:
+    - https://jeanlopezxyz.github.io/cluster-gitops/charts/cluster-oauth-1.0.0.tgz
+    version: 1.0.0
+  etcd-backup:
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2025-11-21T09:12:21.067861395-05:00"
+    description: Create a CronJob that performs ETCD Backup and stores the backup
+      to a PV for OpenShift clusters
+    digest: 9718dc1d58efad9083dd1d124cf94e152e224b9332d554c5c07ddd10a938c19f
+    home: https://github.com/redhat-consulting/openshift-charts
+    keywords:
+    - openshift
+    - etcd
+    - backup
+    - cronjob
+    - security
+    - disaster-recovery
+    maintainers:
+    - email: consulting@redhat.com
+      name: Red Hat Consulting
+    name: etcd-backup
+    sources:
+    - https://github.com/redhat-consulting/openshift-charts
+    type: application
+    urls:
+    - https://jeanlopezxyz.github.io/cluster-gitops/charts/etcd-backup-1.0.0.tgz
+    version: 1.0.0
+  helper-argocd:
+  - annotations:
+      category: GitOps
+    apiVersion: v2
+    appVersion: "1.0"
+    created: "2025-11-21T09:12:21.068008904-05:00"
+    description: Helper chart for creating ArgoCD Applications and AppProjects
+    digest: 066949847226bf7060d175b440065269fe38e00947a38d63bbf1fe7af62d6e00
+    home: https://github.com/redhat-consulting/openshift-day2-gitops
+    keywords:
+    - helper
+    - subchart
+    - gitops
+    - argocd
+    - applications
+    maintainers:
+    - email: consulting@redhat.com
+      name: Red Hat Consulting
+    name: helper-argocd
+    sources:
+    - https://github.com/redhat-consulting/openshift-day2-gitops
+    type: application
+    urls:
+    - https://jeanlopezxyz.github.io/cluster-gitops/charts/helper-argocd-1.0.0.tgz
+    version: 1.0.0
+  helper-operator:
+  - annotations:
+      category: Operators
+    apiVersion: v2
+    appVersion: "1.0"
+    created: "2025-11-21T09:12:21.068125273-05:00"
+    description: Helper chart for installing OpenShift Operators
+    digest: 5224d25a0b4cc752e58d82919210cd4e388a8c8a043e658d8b675336a866fc30
+    home: https://github.com/redhat-consulting/openshift-day2-gitops
+    keywords:
+    - helper
+    - subchart
+    - operator
+    - openshift
+    - olm
+    maintainers:
+    - email: consulting@redhat.com
+      name: Red Hat Consulting
+    name: helper-operator
+    sources:
+    - https://github.com/redhat-consulting/openshift-day2-gitops
+    type: application
+    urls:
+    - https://jeanlopezxyz.github.io/cluster-gitops/charts/helper-operator-1.0.0.tgz
+    version: 1.0.0
+  network-nmstate:
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2025-11-21T09:12:21.068739727-05:00"
+    dependencies:
+    - name: helper-operator
+      repository: https://jeanlopezxyz.github.io/cluster-gitops/charts
+      version: 1.0.0
+    description: Deploy NMState operator and configure node network policies for OpenShift
+    digest: 8394cc2b342e7b1fea21a9792782f63b74615fa882ae163e3f0cc68e6f7609bd
+    home: https://github.com/redhat-consulting/openshift-charts
+    keywords:
+    - openshift
+    - nmstate
+    - networking
+    - operator
+    - bridge
+    - bond
+    maintainers:
+    - email: consulting@redhat.com
+      name: Red Hat Consulting
+    name: network-nmstate
+    sources:
+    - https://github.com/redhat-consulting/openshift-charts
+    type: application
+    urls:
+    - https://jeanlopezxyz.github.io/cluster-gitops/charts/network-nmstate-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2025-11-21T09:12:21.068476725-05:00"
+    dependencies:
+    - name: helper-operator
+      repository: https://jeanlopezxyz.github.io/cluster-gitops/charts
+      version: 1.0.0
+    description: Deploy NMState operator and configure node network policies for OpenShift
+    digest: 133e61c6bf0ef43ac7a6ff9d5bf94f380b46fc213b8dcd89d6d67fbb044afe43
+    home: https://github.com/redhat-consulting/openshift-charts
+    keywords:
+    - openshift
+    - nmstate
+    - networking
+    - operator
+    - bridge
+    - bond
+    maintainers:
+    - email: consulting@redhat.com
+      name: Red Hat Consulting
+    name: network-nmstate
+    sources:
+    - https://github.com/redhat-consulting/openshift-charts
+    type: application
+    urls:
+    - https://jeanlopezxyz.github.io/cluster-gitops/charts/network-nmstate-1.0.0.tgz
+    version: 1.0.0
+  node-timezone:
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2025-11-21T09:12:21.06885371-05:00"
+    description: Configure timezone for OpenShift nodes using MachineConfig
+    digest: db9dcb23f8f6b9cb21ba3be9ccb842a3ceab1b41fc59cb276c123d403bed27d0
+    home: https://github.com/redhat-consulting/openshift-charts
+    keywords:
+    - openshift
+    - timezone
+    - machineconfig
+    maintainers:
+    - email: consulting@redhat.com
+      name: Red Hat Consulting
+    name: node-timezone
+    sources:
+    - https://github.com/redhat-consulting/openshift-charts
+    type: application
+    urls:
+    - https://jeanlopezxyz.github.io/cluster-gitops/charts/node-timezone-1.0.0.tgz
+    version: 1.0.0
+  node-tuning:
+  - apiVersion: v2
+    appVersion: "1.0"
+    created: "2025-11-21T09:12:21.068991237-05:00"
+    description: Configure OpenShift node tuning parameters (max pods, system reserved
+      resources)
+    digest: 59d1442a54c432543bf6a6274b0be8722c910ee95b911bb95aa085a31b056ba6
+    home: https://github.com/redhat-consulting/openshift-charts
+    keywords:
+    - openshift
+    - node-tuning
+    - max-pods
+    - system-reserved
+    - kubelet
+    maintainers:
+    - email: consulting@redhat.com
+      name: Red Hat Consulting
+    name: node-tuning
+    sources:
+    - https://github.com/redhat-consulting/openshift-charts
+    type: application
+    urls:
+    - https://jeanlopezxyz.github.io/cluster-gitops/charts/node-tuning-1.0.0.tgz
+    version: 1.0.0
+generated: "2025-11-21T09:12:21.066841022-05:00"

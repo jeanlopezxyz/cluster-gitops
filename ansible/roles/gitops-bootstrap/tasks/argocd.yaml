@@ -1,0 +1,58 @@
+---
+# ArgoCD configuration tasks
+# Red Hat Consulting
+
+- name: Wait for ArgoCD instance
+  kubernetes.core.k8s_info:
+    api_version: argoproj.io/v1alpha1
+    kind: ArgoCD
+    name: "{{ argocd.name }}"
+    namespace: "{{ argocd.namespace }}"
+    wait: true
+    wait_timeout: "{{ timeouts.argocd_timeout }}"
+
+- name: Configure ArgoCD for cluster admin access
+  when: argocd.enable_cluster_admin | default(true)
+  kubernetes.core.k8s:
+    state: present
+    merge_type: merge
+    definition:
+      apiVersion: argoproj.io/v1alpha1
+      kind: ArgoCD
+      metadata:
+        name: "{{ argocd.name }}"
+        namespace: "{{ argocd.namespace }}"
+      spec:
+        rbac:
+          defaultPolicy: "role:readonly"
+          policy: |
+            g, system:cluster-admins, role:admin
+            g, cluster-admins, role:admin
+          scopes: "[groups]"
+
+- name: Wait for ArgoCD components to be ready
+  kubernetes.core.k8s_info:
+    api_version: apps/v1
+    kind: Deployment
+    name: "{{ item }}"
+    namespace: "{{ argocd.namespace }}"
+    wait: true
+    wait_condition:
+      type: Available
+      status: "True"
+    wait_timeout: "{{ timeouts.argocd_timeout }}"
+  loop:
+    - openshift-gitops-server
+    - openshift-gitops-repo-server
+
+- name: Get ArgoCD route
+  kubernetes.core.k8s_info:
+    api_version: route.openshift.io/v1
+    kind: Route
+    name: openshift-gitops-server
+    namespace: "{{ argocd.namespace }}"
+  register: argocd_route
+
+- name: Display ArgoCD status
+  ansible.builtin.debug:
+    msg: "✅ ArgoCD configured and ready at https://{{ argocd_route.resources[0].spec.host }}"

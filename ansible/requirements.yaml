@@ -1,0 +1,24 @@
+---
+# Ansible Galaxy requirements
+# Red Hat Consulting - Day-2 Operations
+
+# Collections
+collections:
+  - name: kubernetes.core
+    version: ">=2.3.0"
+    source: https://galaxy.ansible.com
+
+  - name: community.general
+    version: ">=5.0.0"
+    source: https://galaxy.ansible.com
+
+  - name: ansible.posix
+    version: ">=1.4.0"
+    source: https://galaxy.ansible.com
+
+  - name: community.crypto
+    version: ">=2.0.0"
+    source: https://galaxy.ansible.com
+
+# Roles (if any external roles are needed)
+roles: []

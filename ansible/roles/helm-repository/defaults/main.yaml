@@ -1,0 +1,17 @@
+---
+# Default variables for helm-repository role
+# Red Hat Consulting
+
+# Helm Repository Configuration
+helm_repo:
+  # Web server port
+  port: 8080
+  # Directory to serve charts
+  document_root: "/var/www/helm-charts"
+  # Source directory for charts
+  charts_source_dir: "{{ playbook_dir }}/../../charts"
+
+# Firewall configuration
+firewall:
+  enabled: true
+  zone: "public"

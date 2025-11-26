@@ -1,0 +1,8 @@
+---
+# Handlers for helm-repository role
+
+- name: Restart httpd
+  ansible.builtin.systemd:
+    name: httpd
+    state: restarted
+  become: true

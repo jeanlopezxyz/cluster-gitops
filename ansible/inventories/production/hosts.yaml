@@ -1,0 +1,53 @@
+# Production inventory for OpenShift Day-2 operations
+# Red Hat Consulting
+
+all:
+  children:
+    # Bastion host for infrastructure services
+    bastion:
+      hosts:
+        bastion-server:
+          ansible_host: "{{ bastion_ip | default('localhost') }}"
+          ansible_user: "{{ bastion_user | default('root') }}"
+          ansible_connection: "{{ 'local' if bastion_ip is not defined else 'ssh' }}"
+          ansible_python_interpreter: "{{ ansible_playbook_python }}"
+
+      vars:
+        # Helm repository configuration (Nginx-based)
+        helm_repo:
+          port: 8080
+          document_root: "/var/www/helm-charts"
+          charts_source_dir: "{{ playbook_dir }}/../../charts"
+
+    # OpenShift cluster connection
+    openshift_clusters:
+      hosts:
+        localhost:
+          ansible_connection: local
+          ansible_python_interpreter: "{{ ansible_playbook_python }}"
+
+      vars:
+        # Cluster configuration
+        cluster_name: "telefonica-prod"
+        gitops_repository: "https://github.com/jeanlopezxyz/cluster-gitops.git"
+
+        # Telefonica-specific configuration
+        timezone: "America/Santiago"
+        network_vlans:
+          - 270
+          - 271
+          - 272
+          - 275
+          - 276
+          - 326
+          - 329
+          - 339
+          - 340
+          - 362
+          - 366
+          - 367
+          - 368
+          - 370
+          - 371
+          - 372
+          - 376

@@ -1,0 +1,42 @@
+{{- if .Values.appProject.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: {{ .Values.appProject.name }}
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    {{- include "helper-argocd.labels" . | nindent 4 }}
+spec:
+  description: {{ .Values.appProject.description | quote }}
+  
+  sourceRepos:
+    {{- range .Values.appProject.sourceRepos }}
+    - {{ . | quote }}
+    {{- end }}
+  
+  destinations:
+    {{- range .Values.appProject.destinations }}
+    - namespace: {{ .namespace | quote }}
+      server: {{ .server | quote }}
+    {{- end }}
+  
+  clusterResourceWhitelist:
+    {{- range .Values.appProject.clusterResourceWhitelist }}
+    - group: {{ .group | quote }}
+      kind: {{ .kind | quote }}
+    {{- end }}
+  
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"
+  
+  roles:
+    - name: admin
+      description: "Admin access to Day-2 operations"
+      policies:
+        - "p, proj:{{ .Values.appProject.name }}:admin, applications, *, {{ .Values.appProject.name }}/*, allow"
+        - "p, proj:{{ .Values.appProject.name }}:admin, repositories, *, *, allow"
+      groups:
+        - "cluster-admins"
+        - "system:cluster-admins"
+{{- end }}

@@ -1,0 +1,106 @@
+---
+# Helm repository with httpd (Apache)
+# Red Hat Consulting
+
+- name: Install httpd
+  ansible.builtin.dnf:
+    name: httpd
+    state: present
+  become: true
+
+- name: Create charts directory
+  ansible.builtin.file:
+    path: "{{ helm_repo.document_root }}"
+    state: directory
+    mode: "0755"
+    owner: apache
+    group: apache
+    setype: httpd_sys_content_t
+  become: true
+
+- name: Find packaged charts
+  ansible.builtin.find:
+    paths: "{{ helm_repo.charts_source_dir }}"
+    patterns: "*.tgz"
+  register: chart_packages
+  delegate_to: localhost
+
+- name: Copy charts
+  ansible.builtin.copy:
+    src: "{{ item.path }}"
+    dest: "{{ helm_repo.document_root }}/"
+    mode: "0644"
+    owner: apache
+    group: apache
+    setype: httpd_sys_content_t
+  loop: "{{ chart_packages.files }}"
+  become: true
+
+- name: Check if index.yaml exists
+  ansible.builtin.stat:
+    path: "{{ helm_repo.charts_source_dir }}/index.yaml"
+  register: index_yaml_stat
+  delegate_to: localhost
+
+- name: Copy index.yaml
+  ansible.builtin.copy:
+    src: "{{ helm_repo.charts_source_dir }}/index.yaml"
+    dest: "{{ helm_repo.document_root }}/index.yaml"
+    mode: "0644"
+    owner: apache
+    group: apache
+    setype: httpd_sys_content_t
+  become: true
+  when: index_yaml_stat.stat.exists
+
+- name: Configure httpd virtual host
+  ansible.builtin.copy:
+    dest: /etc/httpd/conf.d/helm-repo.conf
+    mode: "0644"
+    content: |
+      Listen {{ helm_repo.port }}
+      <VirtualHost *:{{ helm_repo.port }}>
+          DocumentRoot {{ helm_repo.document_root }}
+          <Directory {{ helm_repo.document_root }}>
+              Options Indexes FollowSymLinks
+              AllowOverride None
+              Require all granted
+          </Directory>
+      </VirtualHost>
+  become: true
+  notify: Restart httpd
+
+- name: Open firewall port
+  ansible.posix.firewalld:
+    port: "{{ helm_repo.port }}/tcp"
+    permanent: true
+    state: enabled
+    immediate: true
+  become: true
+  when: firewall.enabled | default(true)
+
+- name: Start httpd
+  ansible.builtin.systemd:
+    name: httpd
+    state: started
+    enabled: true
+  become: true
+
+- name: Generate Helm index
+  ansible.builtin.command:
+    cmd: helm repo index {{ helm_repo.document_root }} --url http://{{ ansible_host }}:{{ helm_repo.port }}
+  become: true
+  changed_when: true
+
+- name: Fix index.yaml permissions
+  ansible.builtin.file:
+    path: "{{ helm_repo.document_root }}/index.yaml"
+    mode: "0644"
+    owner: apache
+    group: apache
+    setype: httpd_sys_content_t
+  become: true
+
+- name: Show repository URL
+  ansible.builtin.debug:
+    msg: "✅ Helm repo: http://{{ ansible_host }}:{{ helm_repo.port }}"

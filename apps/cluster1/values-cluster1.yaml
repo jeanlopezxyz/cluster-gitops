@@ -1,0 +1,202 @@
+# Cluster-specific values for Day-2 operations
+# Telefonica Chile - Cluster 1
+
+# Global settings
+global:
+  namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+    retry:
+      limit: 3
+      backoff:
+        duration: "30s"
+        factor: 2
+        maxDuration: "5m"
+
+# AppProject configuration
+appProject:
+  enabled: true
+  name: "operations"
+  description: "OpenShift Day-2 Operations Project"
+  sourceRepos:
+    - "https://github.com/jeanlopezxyz/cluster-gitops.git"
+    - "https://jeanlopezxyz.github.io/cluster-gitops/charts"
+  destinations:
+    - namespace: "*"
+      server: "https://kubernetes.default.svc"
+  clusterResourceWhitelist:
+    - group: ""
+      kind: "*"
+    - group: "*"
+      kind: "*"
+
+# Applications configuration for Telefonica Chile Cluster 1
+applications:
+  timezone:
+    enabled: true
+    syncWave: "1"
+    chart:
+      repoURL: https://jeanlopezxyz.github.io/cluster-gitops/charts
+      chart: node-timezone
+      targetRevision: "1.0.0"
+    destination:
+      namespace: default
+    values:
+      global:
+        enabled: true
+      timezone:
+        value: "America/Santiago"
+  
+  tuning:
+    enabled: true
+    syncWave: "2"
+    chart:
+      repoURL: https://jeanlopezxyz.github.io/cluster-gitops/charts
+      chart: node-tuning
+      targetRevision: "1.0.0"
+    destination:
+      namespace: default
+    values:
+      global:
+        enabled: true
+      tuning:
+        enabled: true
+  
+  oauth:
+    enabled: true
+    syncWave: "3"
+    chart:
+      repoURL: https://jeanlopezxyz.github.io/cluster-gitops/charts
+      chart: cluster-oauth
+      targetRevision: "1.0.0"
+    destination:
+      namespace: default
+    values:
+      global:
+        enabled: true
+      oauth:
+        enabled: true
+  
+  network:
+    enabled: true
+    syncWave: "4"
+    chart:
+      repoURL: https://jeanlopezxyz.github.io/cluster-gitops/charts
+      chart: network-nmstate
+      targetRevision: "1.0.0"
+    destination:
+      namespace: openshift-nmstate
+    values:
+      global:
+        enabled: true
+        syncwave: "0"
+      helper-operator:
+        global:
+          syncwave: "0"
+        operators:
+          nmstate:
+            enabled: true
+            syncwave: "0"
+            namespace:
+              create: true
+              name: "openshift-nmstate"
+            operatorgroup:
+              create: true
+              targetNamespaces:
+                - "openshift-nmstate"
+            subscription:
+              operatorName: "kubernetes-nmstate-operator"
+              channel: "stable"
+              source: "redhat-operators"
+              sourceNamespace: "openshift-marketplace"
+              approval: "Automatic"
+      nmstate:
+        enabled: false
+        name: "nmstate"
+      # Telefonica Chile specific network configuration
+      networkPolicies:
+        vlans:
+          - 270
+          - 271
+          - 272
+          - 275
+          - 276
+          - 326
+          - 329
+          - 339
+          - 340
+          - 362
+          - 366
+          - 367
+          - 368
+          - 370
+          - 371
+          - 372
+          - 376
+
+  monitoring:
+    enabled: true
+    syncWave: "5"
+    chart:
+      repoURL: https://jeanlopezxyz.github.io/cluster-gitops/charts
+      chart: cluster-monitoring
+      targetRevision: "1.0.1"
+    destination:
+      namespace: openshift-monitoring
+    values:
+      global:
+        enabled: true
+      clusterMonitoring:
+        enabled: true
+        prometheusK8s:
+          retention: "15d"
+          storage:
+            enabled: true
+            size: "100Gi"
+            storageClass: "gp3-csi"
+        alertmanager:
+          storage:
+            enabled: true
+            size: "20Gi"
+            storageClass: "gp3-csi"
+      userWorkloadMonitoring:
+        enabled: true
+        prometheus:
+          retention: "15d"
+          storage:
+            enabled: true
+            size: "50Gi"
+            storageClass: "gp3-csi"
+
+  backup:
+    enabled: true
+    syncWave: "6"
+    chart:
+      repoURL: https://jeanlopezxyz.github.io/cluster-gitops/charts
+      chart: etcd-backup
+      targetRevision: "1.0.0"
+    destination:
+      namespace: etcd-backup
+    values:
+      global:
+        enabled: true
+      namespace:
+        create: true
+        name: "etcd-backup"
+      storage:
+        pvc:
+          size: "100Gi"
+          storageClass: "gp3-csi"
+      backup:
+        enabled: true
+        schedule: "0 */4 * * *"
+        retention: 30
+      keyPruner:
+        enabled: true
+        schedule: "55 */6 * * *"
+        retention: 30

@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: bootstrap
+  namespace: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  project: default
+  source:
+    repoURL: https://jeanlopezxyz.github.io/cluster-gitops/charts
+    chart: helper-argocd
+    targetRevision: "1.0.0"
+    helm:
+      valueFiles:
+        - https://raw.githubusercontent.com/jeanlopezxyz/cluster-gitops/gitops/apps/cluster1/values-cluster1.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openshift-gitops
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

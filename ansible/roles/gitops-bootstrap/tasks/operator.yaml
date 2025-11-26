@@ -1,0 +1,60 @@
+---
+# GitOps Operator installation tasks
+# Red Hat Consulting
+
+- name: Check if GitOps Operator exists
+  kubernetes.core.k8s_info:
+    api_version: operators.coreos.com/v1alpha1
+    kind: Subscription
+    name: "{{ gitops_operator.name }}"
+    namespace: "{{ gitops_operator.namespace }}"
+  register: gitops_check
+
+- name: Install GitOps Operator
+  when: gitops_check.resources | length == 0
+  block:
+    - name: Create GitOps Operator namespace
+      kubernetes.core.k8s:
+        name: "{{ gitops_operator.namespace }}"
+        api_version: v1
+        kind: Namespace
+        state: present
+
+    - name: Create OperatorGroup
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: operators.coreos.com/v1
+          kind: OperatorGroup
+          metadata:
+            name: gitops-operator
+            namespace: "{{ gitops_operator.namespace }}"
+          spec: {}
+
+    - name: Create Subscription
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: operators.coreos.com/v1alpha1
+          kind: Subscription
+          metadata:
+            name: "{{ gitops_operator.name }}"
+            namespace: "{{ gitops_operator.namespace }}"
+          spec:
+            channel: "{{ gitops_operator.channel }}"
+            installPlanApproval: Automatic
+            name: "{{ gitops_operator.name }}"
+            source: "{{ gitops_operator.source }}"
+            sourceNamespace: "{{ gitops_operator.source_namespace }}"
+
+    - name: Wait for GitOps namespace to be created
+      kubernetes.core.k8s_info:
+        api_version: v1
+        kind: Namespace
+        name: "{{ argocd.namespace }}"
+        wait: true
+        wait_timeout: "{{ timeouts.operator_timeout }}"
+
+- name: Display operator status
+  ansible.builtin.debug:
+    msg: "{{ '✅ GitOps Operator already installed' if gitops_check.resources | length > 0 else '✅ GitOps Operator installed successfully' }}"

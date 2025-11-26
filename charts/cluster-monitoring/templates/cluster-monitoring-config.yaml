@@ -1,0 +1,89 @@
+{{- if and .Values.global.enabled .Values.clusterMonitoring.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-monitoring-config
+  namespace: openshift-monitoring
+  labels:
+    {{- include "cluster-monitoring.labels" . | nindent 4 }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+data:
+  config.yaml: |
+    {{- if .Values.clusterMonitoring.prometheusK8s }}
+    prometheusK8s:
+      {{- if .Values.clusterMonitoring.prometheusK8s.retention }}
+      retention: {{ .Values.clusterMonitoring.prometheusK8s.retention | quote }}
+      {{- end }}
+      {{- if .Values.clusterMonitoring.prometheusK8s.storage.enabled }}
+      volumeClaimTemplate:
+        spec:
+          {{- if .Values.clusterMonitoring.prometheusK8s.storage.storageClass }}
+          storageClassName: {{ .Values.clusterMonitoring.prometheusK8s.storage.storageClass }}
+          {{- end }}
+          resources:
+            requests:
+              storage: {{ .Values.clusterMonitoring.prometheusK8s.storage.size }}
+      {{- end }}
+      {{- if .Values.clusterMonitoring.prometheusK8s.resources }}
+      resources:
+        {{- toYaml .Values.clusterMonitoring.prometheusK8s.resources | nindent 8 }}
+      {{- end }}
+    {{- end }}
+    
+    {{- if .Values.clusterMonitoring.alertmanager }}
+    alertmanagerMain:
+      {{- if .Values.clusterMonitoring.alertmanager.storage.enabled }}
+      volumeClaimTemplate:
+        spec:
+          {{- if .Values.clusterMonitoring.alertmanager.storage.storageClass }}
+          storageClassName: {{ .Values.clusterMonitoring.alertmanager.storage.storageClass }}
+          {{- end }}
+          resources:
+            requests:
+              storage: {{ .Values.clusterMonitoring.alertmanager.storage.size }}
+      {{- end }}
+      {{- if .Values.clusterMonitoring.alertmanager.resources }}
+      resources:
+        {{- toYaml .Values.clusterMonitoring.alertmanager.resources | nindent 8 }}
+      {{- end }}
+    {{- end }}
+
+    {{- if .Values.clusterMonitoring.nodeExporter }}
+    nodeExporter:
+      {{- if .Values.clusterMonitoring.nodeExporter.resources }}
+      resources:
+        {{- toYaml .Values.clusterMonitoring.nodeExporter.resources | nindent 8 }}
+      {{- end }}
+    {{- end }}
+
+    {{- if .Values.clusterMonitoring.kubeStateMetrics }}
+    kubeStateMetrics:
+      {{- if .Values.clusterMonitoring.kubeStateMetrics.resources }}
+      resources:
+        {{- toYaml .Values.clusterMonitoring.kubeStateMetrics.resources | nindent 8 }}
+      {{- end }}
+    {{- end }}
+
+    {{- if .Values.telemetry }}
+    {{- if not .Values.telemetry.enabled }}
+    telemeterClient:
+      enabled: false
+    {{- end }}
+    {{- end }}
+
+    {{- if and .Values.telemetry.remoteWrite.enabled .Values.telemetry.remoteWrite.url }}
+    prometheusK8s:
+      remoteWrite:
+      - url: {{ .Values.telemetry.remoteWrite.url }}
+        {{- if and .Values.telemetry.remoteWrite.basicAuth.username .Values.telemetry.remoteWrite.basicAuth.password }}
+        basicAuth:
+          username:
+            name: monitoring-remote-write-auth
+            key: username
+          password:
+            name: monitoring-remote-write-auth
+            key: password
+        {{- end }}
+    {{- end }}
+{{- end }}
