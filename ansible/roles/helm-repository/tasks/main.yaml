@@ -36,6 +36,12 @@
   loop: "{{ chart_packages.files }}"
   become: true
 
+- name: Check if index.yaml exists
+  ansible.builtin.stat:
+    path: "{{ helm_repo.charts_source_dir }}/index.yaml"
+  register: index_yaml_stat
+  delegate_to: localhost
+
 - name: Copy index.yaml
   ansible.builtin.copy:
     src: "{{ helm_repo.charts_source_dir }}/index.yaml"
@@ -45,7 +51,7 @@
     group: apache
     setype: httpd_sys_content_t
   become: true
-  ignore_errors: true
+  when: index_yaml_stat.stat.exists
 
 - name: Configure httpd virtual host
   ansible.builtin.copy:

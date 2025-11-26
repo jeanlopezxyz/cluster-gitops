@@ -6,7 +6,7 @@
   hosts: localhost
   connection: local
   gather_facts: false
-  
+
   vars:
     cluster_name: "openshift-cluster"
 
