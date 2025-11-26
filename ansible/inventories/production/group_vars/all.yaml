@@ -10,9 +10,14 @@ gitops:
 # App of Apps Configuration
 app_of_apps:
   enabled: true
+  # Helm repository for charts
+  helm_repo: "https://jeanlopezxyz.github.io/cluster-gitops/charts"
+  # Git repository for values files
   git_repository: "https://github.com/jeanlopezxyz/cluster-gitops.git"
-  git_branch: "charts"
-  path: "charts"
+  git_branch: "gitops"
+  # Cluster-specific configuration
+  cluster_name: "cluster1"
+  values_path: "apps/cluster1/values-cluster1.yaml"
   sync_policy:
     automated: true
     prune: true

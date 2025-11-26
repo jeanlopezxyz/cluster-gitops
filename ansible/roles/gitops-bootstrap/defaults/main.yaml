@@ -21,6 +21,19 @@ app_of_apps_defaults:
   name: "bootstrap"
   project_name: "operations"
 
+# Default app_of_apps values (should be overridden in inventory)
+app_of_apps:
+  enabled: true
+  helm_repo: "https://jeanlopezxyz.github.io/cluster-gitops/charts"
+  git_repository: "https://github.com/jeanlopezxyz/cluster-gitops.git"
+  git_branch: "gitops"
+  cluster_name: "cluster1"
+  values_path: "apps/cluster1/values-cluster1.yaml"
+  sync_policy:
+    automated: true
+    prune: true
+    self_heal: true
+
 # Timeouts and retries
 timeouts:
   wait_timeout: "{{ gitops.wait_timeout | default(600) }}"

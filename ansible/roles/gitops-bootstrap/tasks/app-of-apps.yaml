@@ -15,7 +15,7 @@
         description: "OpenShift Day-2 Operations Project"
         sourceRepos:
           - "{{ app_of_apps.git_repository }}"
-          - "https://jeanlopezxyz.github.io/cluster-gitops/charts"
+          - "{{ app_of_apps.helm_repo }}"
         destinations:
           - namespace: "*"
             server: "https://kubernetes.default.svc"
@@ -37,14 +37,14 @@
               - "cluster-admins"
               - "system:cluster-admins"
 
-- name: Deploy App of Apps using Helm with helper-argocd
+- name: Deploy App of Apps using multi-source pattern
   kubernetes.core.k8s:
     state: present
     definition:
       apiVersion: argoproj.io/v1alpha1
       kind: Application
       metadata:
-        name: "{{ app_of_apps_defaults.name }}"
+        name: "{{ app_of_apps_defaults.name }}-{{ app_of_apps.cluster_name }}"
         namespace: "{{ argocd.namespace }}"
         annotations:
           argocd.argoproj.io/sync-wave: "1"
@@ -52,20 +52,25 @@
           - resources-finalizer.argocd.argoproj.io
       spec:
         project: "{{ app_of_apps_defaults.project_name }}"
-        source:
-          repoURL: "https://jeanlopezxyz.github.io/cluster-gitops/charts"
-          chart: "helper-argocd"
-          targetRevision: "1.0.0"
-          helm:
-            valueFiles:
-              - "https://raw.githubusercontent.com/jeanlopezxyz/cluster-gitops/charts/charts/helper-argocd/values-production.yaml"
+        sources:
+          # Source 1: Helm chart from GitHub Pages
+          - repoURL: "{{ app_of_apps.helm_repo }}"
+            chart: "helper-argocd"
+            targetRevision: "1.0.0"
+            helm:
+              valueFiles:
+                - "$values/{{ app_of_apps.values_path }}"
+          # Source 2: Values from Git repository
+          - repoURL: "{{ app_of_apps.git_repository }}"
+            targetRevision: "{{ app_of_apps.git_branch }}"
+            ref: values
         destination:
           server: "https://kubernetes.default.svc"
           namespace: "{{ argocd.namespace }}"
         syncPolicy:
           automated:
-            prune: true
-            selfHeal: true
+            prune: "{{ app_of_apps.sync_policy.prune | default(true) }}"
+            selfHeal: "{{ app_of_apps.sync_policy.self_heal | default(true) }}"
             allowEmpty: false
           syncOptions:
             - CreateNamespace=true
@@ -88,11 +93,11 @@
   kubernetes.core.k8s_info:
     api_version: argoproj.io/v1alpha1
     kind: Application
-    name: "{{ app_of_apps_defaults.name }}"
+    name: "{{ app_of_apps_defaults.name }}-{{ app_of_apps.cluster_name }}"
     namespace: "{{ argocd.namespace }}"
     wait: true
     wait_timeout: 300
 
 - name: Display App of Apps status
   ansible.builtin.debug:
-    msg: "✅ App of Apps '{{ app_of_apps_defaults.name }}' deployed successfully"
+    msg: "✅ App of Apps '{{ app_of_apps_defaults.name }}-{{ app_of_apps.cluster_name }}' deployed successfully"
