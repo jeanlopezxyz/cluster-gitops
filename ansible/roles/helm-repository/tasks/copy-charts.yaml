@@ -1,0 +1,24 @@
+---
+# Copy Helm charts to storage directory
+# Red Hat Consulting
+
+- name: Find all packaged charts (.tgz files)
+  ansible.builtin.find:
+    paths: "{{ helm_repo.charts_source_dir }}"
+    patterns: "*.tgz"
+    recurse: false
+  register: chart_packages
+  delegate_to: localhost
+
+- name: Copy packaged charts to storage
+  ansible.builtin.copy:
+    src: "{{ item.path }}"
+    dest: "{{ helm_repo.chartmuseum.storage_path }}/"
+    mode: "0644"
+  loop: "{{ chart_packages.files }}"
+  become: true
+  when: chart_packages.files | length > 0
+
+- name: Display copied charts
+  ansible.builtin.debug:
+    msg: "📦 Copied {{ chart_packages.files | length }} charts to {{ helm_repo.chartmuseum.storage_path }}"

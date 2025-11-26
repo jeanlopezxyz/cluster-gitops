@@ -1,0 +1,34 @@
+---
+# Default variables for helm-repository role
+# Red Hat Consulting
+
+# Helm Repository Configuration
+helm_repo:
+  # Server type: chartmuseum or nginx
+  type: "chartmuseum"
+
+  # ChartMuseum configuration
+  chartmuseum:
+    image: "ghcr.io/helm/chartmuseum:v0.16.1"
+    port: 8080
+    storage_path: "/var/lib/chartmuseum"
+    container_name: "chartmuseum"
+
+  # Nginx configuration (alternative)
+  nginx:
+    port: 8080
+    document_root: "/var/www/helm-charts"
+
+  # Common settings
+  charts_source_dir: "{{ playbook_dir }}/../charts"
+  enabled: true
+
+# Firewall configuration
+firewall:
+  enabled: true
+  zone: "public"
+
+# Systemd service configuration
+systemd:
+  enabled: true
+  user: "root"

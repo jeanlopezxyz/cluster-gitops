@@ -1,0 +1,53 @@
+---
+# Main tasks for helm-repository role
+# Red Hat Consulting
+
+- name: Display Helm repository setup banner
+  ansible.builtin.debug:
+    msg: "📦 Setting up Helm Chart Repository on bastion"
+
+- name: Install required packages
+  ansible.builtin.dnf:
+    name:
+      - podman
+      - firewalld
+    state: present
+  become: true
+
+- name: Ensure firewalld is running
+  ansible.builtin.systemd:
+    name: firewalld
+    state: started
+    enabled: true
+  become: true
+  when: firewall.enabled | default(true)
+
+- name: Create charts storage directory
+  ansible.builtin.file:
+    path: "{{ helm_repo.chartmuseum.storage_path }}"
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
+  become: true
+
+- name: Copy charts to storage directory
+  ansible.builtin.include_tasks: copy-charts.yaml
+
+- name: Setup ChartMuseum container
+  ansible.builtin.include_tasks: chartmuseum.yaml
+  when: helm_repo.type == "chartmuseum"
+
+- name: Configure firewall
+  ansible.builtin.include_tasks: firewall.yaml
+  when: firewall.enabled | default(true)
+
+- name: Generate Helm repository index
+  ansible.builtin.include_tasks: generate-index.yaml
+
+- name: Display completion message
+  ansible.builtin.debug:
+    msg: |
+      ✅ Helm Repository configured successfully!
+      📍 URL: http://{{ ansible_host | default('localhost') }}:{{ helm_repo.chartmuseum.port }}/charts
+      📝 Add repo: helm repo add day2-charts http://{{ ansible_host | default('localhost') }}:{{ helm_repo.chartmuseum.port }}/charts

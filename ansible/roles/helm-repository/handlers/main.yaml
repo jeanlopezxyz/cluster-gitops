@@ -1,0 +1,16 @@
+---
+# Handlers for helm-repository role
+# Red Hat Consulting
+
+- name: Reload firewalld
+  ansible.builtin.systemd:
+    name: firewalld
+    state: reloaded
+  become: true
+
+- name: Restart chartmuseum
+  containers.podman.podman_container:
+    name: "{{ helm_repo.chartmuseum.container_name }}"
+    state: started
+    restart: true
+  become: true
